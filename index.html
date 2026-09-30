@@ -43,10 +43,9 @@
       font-family: var(--font);
       font-size: 14px;
       line-height: 1.45;
-      padding-bottom: 74px; /* Space for bottom nav */
+      padding-bottom: 74px;
     }
 
-    /* Mobile Header */
     header {
       position: sticky;
       top: 0;
@@ -74,7 +73,6 @@
       color: var(--text-muted);
     }
 
-    /* Content Views */
     main {
       padding: 14px 16px;
     }
@@ -103,7 +101,6 @@
       margin-top: 2px;
     }
 
-    /* Filter & Toggle Chips (Horizontal Scrollable) */
     .filter-scroll {
       display: flex;
       gap: 8px;
@@ -135,7 +132,6 @@
       font-weight: 600;
     }
 
-    /* Mobile Chart Card */
     .chart-card {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -154,7 +150,6 @@
       touch-action: manipulation;
     }
 
-    /* Tappable Item Cards (Rankings & Lists) */
     .card-list {
       display: flex;
       flex-direction: column;
@@ -236,7 +231,6 @@
       color: var(--text);
     }
 
-    /* Badges */
     .badge {
       display: inline-block;
       font-size: 10px;
@@ -252,7 +246,6 @@
     .badge-c4 { background: var(--c4-bg); color: var(--c4); border: 1px solid #fecdd3; }
     .badge-c0 { background: var(--c0-bg); color: var(--c0); border: 1px solid var(--border-dark); }
 
-    /* Stakeholder RAM Cards for Mobile */
     .ram-role-pill {
       display: inline-flex;
       align-items: center;
@@ -285,7 +278,6 @@
       text-transform: uppercase;
     }
 
-    /* Lean Improvement Clusters */
     .cluster-mobile-card {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -338,7 +330,6 @@
       line-height: 1.35;
     }
 
-    /* Bottom App Bar Navigation */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -379,7 +370,6 @@
       font-size: 10px;
     }
 
-    /* Native-like Bottom Sheet (Inspector Drawer) */
     .sheet-backdrop {
       position: fixed;
       top: 0;
@@ -522,10 +512,10 @@
 </head>
 <body>
 
-  <!-- Sticky Mobile Header -->
+  <!-- Header -->
   <header>
     <h1>SE Design Waste Framework</h1>
-    <p>DTU Thesis • Zacharias Helgren Dahl (N=34)[cite: 1]</p>
+    <p>DTU Thesis • Zacharias Helgren Dahl (N=34)</p>
   </header>
 
   <main>
@@ -534,32 +524,32 @@
     <section id="view-matrix" class="view-section active">
       <div class="section-title">
         <h2>Severity Matrix (S vs F)</h2>
-        <p>Impact Score ($S$, x-axis)[cite: 1] vs Frequency ($F$, y-axis)[cite: 1] (Midpoint: 2.5)[cite: 1]</p>
+        <p>Impact Score (S, x-axis) vs Frequency (F, y-axis) • Midpoint: 2.5</p>
       </div>
 
-      <!-- Scrollable Filters -->
+      <!-- Filters -->
       <div class="filter-scroll">
-        <button class="chip active" id="btn-mat-comb">Combined (N=34)[cite: 1]</button>
-        <button class="chip" id="btn-mat-reg">US vs DK[cite: 1]</button>
+        <button class="chip active" id="btn-mat-comb">Combined (N=34)</button>
+        <button class="chip" id="btn-mat-reg">US vs DK</button>
         <button class="chip" id="btn-mat-all">All Items</button>
-        <button class="chip" id="btn-mat-ta">Trend A (Inverse)[cite: 1]</button>
-        <button class="chip" id="btn-mat-tb">Trend B (Positive)[cite: 1]</button>
+        <button class="chip" id="btn-mat-ta">Trend A (Inverse)</button>
+        <button class="chip" id="btn-mat-tb">Trend B (Positive)</button>
       </div>
 
       <div class="chart-card">
         <svg id="mobile-svg-matrix" class="matrix-svg" viewBox="0 0 340 340"></svg>
         <div style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:center;">
-          Tap any number marker to inspect activity details[cite: 1]
+          Tap any number marker to inspect activity details
         </div>
       </div>
 
       <div style="margin-top:14px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:12px;">
         <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px;">
-          Matrix Dynamics (Report p. 63-65)[cite: 1]
+          Matrix Dynamics (Report p. 63–65)
         </div>
         <p style="font-size:12px; color:var(--text); line-height:1.4;">
-          <strong>Trend A:</strong> High frequency activities cluster at lower impact, while high-impact wastes show lower occurrence[cite: 1].<br>
-          <strong>Trend B:</strong> WA1 (Late Arch. Changes) is the standalone high-impact + high-frequency outlier[cite: 1]. WA19 sits isolated as low-impact + low-frequency[cite: 1].
+          <strong>Trend A:</strong> High frequency activities cluster at lower impact, while high-impact wastes show lower occurrence.<br>
+          <strong>Trend B:</strong> WA1 (Late Architectural Changes) is the standalone high-impact and high-frequency outlier. WA19 sits isolated as low-impact and low-frequency.
         </p>
       </div>
     </section>
@@ -568,15 +558,15 @@
     <section id="view-rankings" class="view-section">
       <div class="section-title">
         <h2>Rankings &amp; WSI</h2>
-        <p>Formula: $WSI = S \times F = \frac{\text{Cost} + \text{Sched} + \text{Qual}}{3} \times F$[cite: 1]</p>
+        <p>Formula: WSI = S × F = ((Cost + Schedule + Quality) / 3) × F</p>
       </div>
 
       <div class="filter-scroll" id="rankings-filter-scroll">
-        <button class="chip active" data-filter="all">All (19)[cite: 1]</button>
-        <button class="chip" data-filter="1">Cluster 1[cite: 1]</button>
-        <button class="chip" data-filter="2">Cluster 2[cite: 1]</button>
-        <button class="chip" data-filter="3">Cluster 3[cite: 1]</button>
-        <button class="chip" data-filter="4">Cluster 4[cite: 1]</button>
+        <button class="chip active" data-filter="all">All (19)</button>
+        <button class="chip" data-filter="1">Cluster 1</button>
+        <button class="chip" data-filter="2">Cluster 2</button>
+        <button class="chip" data-filter="3">Cluster 3</button>
+        <button class="chip" data-filter="4">Cluster 4</button>
       </div>
 
       <div class="card-list" id="rankings-card-list"></div>
@@ -586,7 +576,7 @@
     <section id="view-ram" class="view-section">
       <div class="section-title">
         <h2>Responsibility Matrix</h2>
-        <p>Mitigation roles (Table 6.4): Perform (P), Contribute (C), Approve (A)[cite: 1]</p>
+        <p>Mitigation roles (Table 6.4): Perform (P), Contribute (C), Approve (A)</p>
       </div>
       <div class="card-list" id="ram-card-list"></div>
     </section>
@@ -595,7 +585,7 @@
     <section id="view-clusters" class="view-section">
       <div class="section-title">
         <h2>Lean Improvement Clusters</h2>
-        <p>Top 5 mapped Lean tools per operational domain (pp. 86–89)[cite: 1]</p>
+        <p>Top 5 mapped Lean tools per operational domain (pp. 86–89)</p>
       </div>
       <div id="clusters-card-list"></div>
     </section>
@@ -636,42 +626,42 @@
     </div>
     <div class="sheet-content">
       <div class="sheet-section">
-        <h4>Report Description (Table 5.4)[cite: 1]</h4>
+        <h4>Report Description (Table 5.4)</h4>
         <p id="sheet-desc">-</p>
       </div>
 
       <div class="sheet-section">
-        <h4>Quantitative Evaluation (1.0–4.0 scale)[cite: 1]</h4>
+        <h4>Quantitative Evaluation (1.0–4.0 scale)</h4>
         <div class="sheet-metric-grid">
           <div class="sheet-metric-box">
-            <div class="label">Cost[cite: 1]</div>
+            <div class="label">Cost</div>
             <div class="val" id="sm-cost">-</div>
           </div>
           <div class="sheet-metric-box">
-            <div class="label">Schedule[cite: 1]</div>
+            <div class="label">Schedule</div>
             <div class="val" id="sm-sched">-</div>
           </div>
           <div class="sheet-metric-box">
-            <div class="label">Quality[cite: 1]</div>
+            <div class="label">Quality</div>
             <div class="val" id="sm-qual">-</div>
           </div>
           <div class="sheet-metric-box">
-            <div class="label">Combined (S)[cite: 1]</div>
+            <div class="label">Combined (S)</div>
             <div class="val" id="sm-s" style="color:#0284c7;">-</div>
           </div>
           <div class="sheet-metric-box">
-            <div class="label">Frequency (F)[cite: 1]</div>
+            <div class="label">Frequency (F)</div>
             <div class="val" id="sm-f" style="color:#d97706;">-</div>
           </div>
           <div class="sheet-metric-box">
-            <div class="label">WSI Score[cite: 1]</div>
+            <div class="label">WSI Score</div>
             <div class="val" id="sm-wsi" style="color:#0f172a;">-</div>
           </div>
         </div>
       </div>
 
       <div class="sheet-section">
-        <h4>Operational Classification[cite: 1]</h4>
+        <h4>Operational Classification</h4>
         <p style="font-size:11px; line-height:1.6;">
           <strong>Cluster:</strong> <span id="sheet-cluster">-</span><br>
           <strong>Origin:</strong> <span id="sheet-origin">-</span><br>
@@ -680,12 +670,12 @@
       </div>
 
       <div class="sheet-section">
-        <h4>Stakeholder Authority &amp; Mitigation (Table 6.4)[cite: 1]</h4>
+        <h4>Stakeholder Authority &amp; Mitigation (Table 6.4)</h4>
         <div id="sheet-ram-details" style="font-size:11px; font-family:var(--mono); display:flex; flex-wrap:wrap; gap:4px;"></div>
       </div>
 
       <div class="sheet-section" id="sheet-quote-section" style="display:none;">
-        <h4>Practitioner Account from Interviews[cite: 1]</h4>
+        <h4>Practitioner Account from Interviews</h4>
         <div class="sheet-quote-box">
           <p id="sheet-quote">-</p>
           <div class="auth" id="sheet-quote-auth">-</div>
@@ -695,7 +685,6 @@
   </div>
 
   <script>
-    // Exact Empirical Dataset from Zacharias Helgren Dahl DTU Master's Thesis (2026)
     const ACTIVITIES = [
       {
         id: "WA1", num: 1, name: "Late Architectural Changes",
@@ -859,7 +848,7 @@
         us: { s: 1.58, f: 2.54 }, dk: { s: 2.98, f: 2.10 },
         leanWastes: ["Non-Utilized Talent", "Motion", "Defects"],
         ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "-" },
-        quote: "Some of that knowledge is lost because of it and then again can lead to errors and misunderstanding and just taking longer to do the actual project work... So it is inefficient in that way.",
+        quote: "Some of that knowledge is lost because of it and then again can lead to errors and misunderstanding and just taking longer to do the actual project work, because each time you have someone new working on a project who's not familiar, they have to take the time to acquaint themselves with the actual projects... So it is inefficient in that way.",
         quoteAuthor: "BIM Manager Interview (EI4)"
       },
       {
@@ -953,13 +942,12 @@
           { name: "Obeya (Big Room)", desc: "Replaces excessive email threads and scattered meetings with focused coordination." },
           { name: "Last Planner System (LPS)", desc: "Protects engineers from urgent interruptions via stable lookahead work plans." },
           { name: "Visual Management", desc: "Visual workload boards clarifying delegation and task status." },
-          { name: "Root Cause Analysis (RCA)", desc: "Uncovers root drivers of repetitive urgent interruptions and staff reassignments." },
+          { name: "Root Cause Analysis (RCA)", desc: "Uncovers root drivers of recurring urgent interruptions and staff reassignments." },
           { name: "Kaizen Events / Blitz", desc: "Rapid, highly focused team workshops addressing internal workflow bottlenecks." }
         ]
       }
     ];
 
-    // Colors
     function getColor(c) {
       if (c === 1) return '#2563eb';
       if (c === 2) return '#0d9488';
@@ -976,7 +964,6 @@
       return '<span class="badge badge-c0">Omitted</span>';
     }
 
-    // Bottom Navigation switching
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', () => {
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -989,7 +976,6 @@
       });
     });
 
-    // RENDER: Rankings List
     function renderRankingsCards(items) {
       const container = document.getElementById('rankings-card-list');
       container.innerHTML = '';
@@ -1019,7 +1005,6 @@
       });
     }
 
-    // Filter Rankings by Cluster
     document.querySelectorAll('#rankings-filter-scroll .chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('#rankings-filter-scroll .chip').forEach(c => c.classList.remove('active'));
@@ -1033,7 +1018,6 @@
       });
     });
 
-    // RENDER: Stakeholder RAM Cards
     function renderRamCards() {
       const container = document.getElementById('ram-card-list');
       container.innerHTML = '';
@@ -1070,7 +1054,6 @@
       });
     }
 
-    // RENDER: Clusters & Tools
     function renderClustersCards() {
       const container = document.getElementById('clusters-card-list');
       container.innerHTML = '';
@@ -1103,9 +1086,8 @@
       });
     }
 
-    // RENDER: Mobile SVG Matrix
-    let matView = 'comb'; // 'comb' | 'reg'
-    let matTrend = 'all'; // 'all' | 'ta' | 'tb'
+    let matView = 'comb';
+    let matTrend = 'all';
 
     function renderMobileMatrix() {
       const svg = document.getElementById('mobile-svg-matrix');
@@ -1125,18 +1107,14 @@
       const midX = xs(2.5);
       const midY = ys(2.5);
 
-      // Background Canvas
       svg.innerHTML += `<rect x="${padL}" y="${padT}" width="${pw}" height="${ph}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>`;
-      // Top Right High Impact / High Freq quadrant highlight
       svg.innerHTML += `<rect x="${midX}" y="${padT}" width="${pw - (midX - padL)}" height="${midY - padT}" fill="#f1f5f9" fill-opacity="0.6"/>`;
 
-      // Split lines at 2.5
       svg.innerHTML += `
         <line x1="${midX}" y1="${padT}" x2="${midX}" y2="${padT + ph}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
         <line x1="${padL}" y1="${midY}" x2="${padL + pw}" y2="${midY}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
       `;
 
-      // Ticks
       [1.0, 2.0, 2.5, 3.0, 4.0].forEach(v => {
         const x = xs(v);
         const y = ys(v);
@@ -1148,13 +1126,11 @@
         `;
       });
 
-      // Axis labels
       svg.innerHTML += `
         <text x="${padL + pw / 2}" y="${size - 4}" text-anchor="middle" font-size="10" font-weight="600" fill="#0f172a">Combined Impact (S)</text>
         <text x="10" y="${padT + ph / 2}" text-anchor="middle" font-size="10" font-weight="600" fill="#0f172a" transform="rotate(-90 10 ${padT + ph / 2})">Frequency (F)</text>
       `;
 
-      // Filter dataset
       let dataset = [...ACTIVITIES];
       if (matTrend === 'ta') {
         const tA = ["WA10", "WA17", "WA6", "WA9", "WA8", "WA5", "WA14", "WA16", "WA12", "WA15", "WA11", "WA2"];
@@ -1164,7 +1140,6 @@
         dataset = dataset.filter(a => tB.includes(a.id));
       }
 
-      // Plot Points
       dataset.forEach(item => {
         if (matView === 'comb') {
           const cx = xs(item.s);
@@ -1180,7 +1155,6 @@
           g.addEventListener('click', () => openSheet(item));
           svg.appendChild(g);
         } else {
-          // Regional US vs DK
           const usX = xs(item.us.s);
           const usY = ys(item.us.f);
           const dkX = xs(item.dk.s);
@@ -1188,7 +1162,6 @@
 
           svg.innerHTML += `<line x1="${usX}" y1="${usY}" x2="${dkX}" y2="${dkY}" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2,2"/>`;
 
-          // US circle
           const gUS = document.createElementNS("http://www.w3.org/2000/svg", "g");
           gUS.innerHTML = `
             <circle cx="${usX}" cy="${usY}" r="8" fill="#ea580c" stroke="#ffffff" stroke-width="1.2"/>
@@ -1197,7 +1170,6 @@
           gUS.addEventListener('click', () => openSheet(item));
           svg.appendChild(gUS);
 
-          // DK Diamond
           const gDK = document.createElementNS("http://www.w3.org/2000/svg", "g");
           gDK.innerHTML = `
             <polygon points="${dkX},${dkY - 9} ${dkX + 9},${dkY} ${dkX},${dkY + 9} ${dkX - 9},${dkY}" fill="#059669" stroke="#ffffff" stroke-width="1.2"/>
@@ -1209,7 +1181,6 @@
       });
     }
 
-    // Matrix Filters Event Listeners
     document.getElementById('btn-mat-comb').addEventListener('click', function() {
       matView = 'comb';
       this.classList.add('active');
@@ -1241,7 +1212,6 @@
       renderMobileMatrix();
     });
 
-    // Native Bottom Sheet Logic
     function openSheet(item) {
       document.getElementById('sheet-badge').textContent = item.id;
       document.getElementById('sheet-badge').className = `badge badge-c${item.cluster}`;
@@ -1294,7 +1264,6 @@
     document.getElementById('sheet-backdrop').addEventListener('click', closeSheet);
     document.getElementById('sheet-handle-bar').addEventListener('click', closeSheet);
 
-    // Initial Load
     window.addEventListener('DOMContentLoaded', () => {
       renderMobileMatrix();
       renderRankingsCards(ACTIVITIES);

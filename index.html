@@ -2,1731 +2,1304 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Structural Engineering Design Waste Framework — DTU Master Thesis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Structural Design Waste Explorer (DTU Thesis)</title>
   <style>
     :root {
-      --bg-canvas: #ffffff;
-      --bg-surface: #f8fafc;
+      --bg: #ffffff;
       --bg-card: #ffffff;
-      --border-subtle: #e2e8f0;
-      --border-medium: #cbd5e1;
-      --border-focus: #0f172a;
-      --text-main: #0f172a;
-      --text-secondary: #475569;
+      --bg-subtle: #f8fafc;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --text: #0f172a;
       --text-muted: #64748b;
+      --text-light: #94a3b8;
       
-      --c-cluster1: #2563eb;
-      --c-cluster1-bg: #eff6ff;
-      --c-cluster2: #0d9488;
-      --c-cluster2-bg: #f0fdfa;
-      --c-cluster3: #7c3aed;
-      --c-cluster3-bg: #faf5ff;
-      --c-cluster4: #e11d48;
-      --c-cluster4-bg: #fff1f2;
-      --c-omitted: #64748b;
-      --c-omitted-bg: #f8fafc;
+      --c1: #2563eb;
+      --c1-bg: #eff6ff;
+      --c2: #0d9488;
+      --c2-bg: #f0fdfa;
+      --c3: #7c3aed;
+      --c3-bg: #faf5ff;
+      --c4: #e11d48;
+      --c4-bg: #fff1f2;
+      --c0: #64748b;
+      --c0-bg: #f1f5f9;
 
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      --font-mono: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-canvas);
-      color: var(--text-main);
-      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
       font-size: 14px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      line-height: 1.45;
+      padding-bottom: 74px; /* Space for bottom nav */
     }
 
-    /* Header Bar */
+    /* Mobile Header */
     header {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 18px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       position: sticky;
       top: 0;
-      z-index: 40;
-    }
-
-    .brand {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      z-index: 30;
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
-    .brand h1 {
-      font-size: 17px;
+    header h1 {
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
+      color: var(--text);
+      letter-spacing: -0.01em;
     }
 
-    .brand p {
-      font-size: 12px;
+    header p {
+      font-size: 11px;
+      font-family: var(--mono);
       color: var(--text-muted);
-      font-family: var(--font-mono);
     }
 
-    .nav-tabs {
-      display: flex;
-      background: var(--bg-surface);
-      padding: 3px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-      gap: 2px;
-    }
-
-    .nav-btn {
-      background: transparent;
-      border: none;
-      padding: 7px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .nav-btn:hover {
-      color: var(--text-main);
-    }
-
-    .nav-btn.active {
-      background: #ffffff;
-      color: var(--text-main);
-      font-weight: 600;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-
-    /* Main Container */
+    /* Content Views */
     main {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 28px 32px 80px 32px;
+      padding: 14px 16px;
     }
 
-    .view-panel {
+    .view-section {
       display: none;
     }
 
-    .view-panel.active {
+    .view-section.active {
       display: block;
     }
 
-    /* Section Subheadings */
-    .view-header {
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 16px;
+    .section-title {
+      margin-bottom: 12px;
     }
 
-    .view-header h2 {
-      font-size: 20px;
+    .section-title h2 {
+      font-size: 17px;
       font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text-main);
+      color: var(--text);
     }
 
-    .view-header p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 4px;
+    .section-title p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
     }
 
-    /* Badges & Tags */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      font-family: var(--font-mono);
+    /* Filter & Toggle Chips (Horizontal Scrollable) */
+    .filter-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .filter-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
       white-space: nowrap;
+      cursor: pointer;
     }
 
-    .badge-c1 { background: var(--c-cluster1-bg); color: var(--c-cluster1); border: 1px solid #bfdbfe; }
-    .badge-c2 { background: var(--c-cluster2-bg); color: var(--c-cluster2); border: 1px solid #99f6e4; }
-    .badge-c3 { background: var(--c-cluster3-bg); color: var(--c-cluster3); border: 1px solid #ddd6fe; }
-    .badge-c4 { background: var(--c-cluster4-bg); color: var(--c-cluster4); border: 1px solid #fecdd3; }
-    .badge-c0 { background: var(--c-omitted-bg); color: var(--c-omitted); border: 1px solid var(--border-medium); }
-
-    /* Matrix Controls & Canvas */
-    .matrix-layout {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 28px;
-      align-items: start;
+    .chip.active {
+      background: var(--text);
+      color: #ffffff;
+      border-color: var(--text);
+      font-weight: 600;
     }
 
-    .matrix-chart-card {
+    /* Mobile Chart Card */
+    .chart-card {
       background: #ffffff;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 24px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .tool-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .btn-toggle {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-    }
-
-    .btn-toggle.active {
-      background: var(--text-main);
-      color: #ffffff;
-      border-color: var(--text-main);
-    }
-
-    .matrix-svg-wrapper {
-      position: relative;
+    .matrix-svg {
       width: 100%;
-      height: 600px;
+      max-width: 380px;
+      height: auto;
+      touch-action: manipulation;
     }
 
-    svg.chart-canvas {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Matrix Side Insights Panel */
-    .matrix-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .info-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .info-card h3 {
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .info-card p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .info-stat-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      border-bottom: 1px dashed var(--border-subtle);
-      font-size: 12px;
-    }
-
-    .info-stat-row:last-child {
-      border-bottom: none;
-    }
-
-    /* Table Styles */
-    .table-container {
-      background: #ffffff;
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      overflow-x: auto;
-    }
-
-    table.data-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 13px;
-    }
-
-    table.data-table th {
-      background: var(--bg-surface);
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border-subtle);
-      white-space: nowrap;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    table.data-table th:hover {
-      color: var(--text-main);
-    }
-
-    table.data-table td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-    }
-
-    table.data-table tr:hover td {
-      background: #f8fafc;
-      cursor: pointer;
-    }
-
-    table.data-table tr.selected td {
-      background: #f1f5f9;
-    }
-
-    .score-cell {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    /* Stakeholder Matrix (RAM) Table */
-    .ram-cell {
-      text-align: center;
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 12px;
-    }
-    .ram-P { color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; display: inline-block; }
-    .ram-C { color: #d97706; background: #fef3c7; padding: 2px 6px; border-radius: 4px; display: inline-block; }
-    .ram-A { color: #dc2626; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; }
-    .ram-none { color: #cbd5e1; }
-
-    /* Lean Improvement Clusters */
-    .clusters-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-
-    .cluster-card {
-      background: #ffffff;
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .cluster-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 14px;
-    }
-
-    .cluster-card-header h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .cluster-scores {
-      display: flex;
-      gap: 16px;
-      font-size: 12px;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-    }
-
-    .cluster-scores span {
-      color: var(--text-main);
-      font-weight: 600;
-    }
-
-    .cluster-tool-list {
+    /* Tappable Item Cards (Rankings & Lists) */
+    .card-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .cluster-tool-item {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 12px 14px;
+    .activity-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.1s ease;
     }
 
-    .cluster-tool-item h4 {
+    .activity-card:active {
+      background: var(--bg-subtle);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-name {
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 4px;
+      color: var(--text);
     }
 
-    .cluster-tool-item p {
+    .wsi-tag {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .card-desc {
       font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
+      color: var(--text-muted);
+      line-height: 1.4;
     }
 
-    .stakeholder-tag-row {
+    .card-metrics-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border);
+      padding-top: 6px;
+      margin-top: 2px;
+    }
+
+    .card-metrics-row span b {
+      color: var(--text);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: var(--mono);
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .badge-c1 { background: var(--c1-bg); color: var(--c1); border: 1px solid #bfdbfe; }
+    .badge-c2 { background: var(--c2-bg); color: var(--c2); border: 1px solid #99f6e4; }
+    .badge-c3 { background: var(--c3-bg); color: var(--c3); border: 1px solid #ddd6fe; }
+    .badge-c4 { background: var(--c4-bg); color: var(--c4); border: 1px solid #fecdd3; }
+    .badge-c0 { background: var(--c0-bg); color: var(--c0); border: 1px solid var(--border-dark); }
+
+    /* Stakeholder RAM Cards for Mobile */
+    .ram-role-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-family: var(--mono);
+      font-weight: 700;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    .ram-P { background: #e0f2fe; color: #0284c7; }
+    .ram-C { background: #fef3c7; color: #d97706; }
+    .ram-A { background: #fee2e2; color: #dc2626; }
+    .ram-none { background: #f8fafc; color: #cbd5e1; }
+
+    .ram-roles-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
       margin-top: 4px;
     }
 
-    .stakeholder-tag {
-      font-size: 10px;
-      font-family: var(--font-mono);
-      padding: 2px 6px;
-      border-radius: 3px;
-      background: #f1f5f9;
-      color: var(--text-secondary);
-    }
-    .stakeholder-tag.involved {
-      background: #0f172a;
-      color: #ffffff;
+    .ram-col-head {
+      font-size: 9px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      text-transform: uppercase;
     }
 
-    /* Slide-over Inspection Drawer */
-    .drawer-overlay {
+    /* Lean Improvement Clusters */
+    .cluster-mobile-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .cluster-head {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .cluster-head h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .cluster-head p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .cluster-tools-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tool-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+
+    .tool-box h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tool-box p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    /* Bottom App Bar Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: 60px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 40;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .nav-label {
+      font-size: 10px;
+    }
+
+    /* Native-like Bottom Sheet (Inspector Drawer) */
+    .sheet-backdrop {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(15, 23, 42, 0.2);
+      background: rgba(15, 23, 42, 0.4);
       z-index: 50;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease;
     }
 
-    .drawer-overlay.open {
+    .sheet-backdrop.open {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .drawer {
+    .bottom-sheet {
       position: fixed;
-      top: 0;
-      right: 0;
-      width: 480px;
-      max-width: 90vw;
-      height: 100vh;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
+      max-height: 85vh;
       background: #ffffff;
-      box-shadow: -4px 0 24px rgba(0,0,0,0.08);
+      border-radius: 16px 16px 0 0;
       z-index: 55;
-      transform: translateX(100%);
+      transform: translateY(100%);
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
     }
 
-    .drawer.open {
-      transform: translateX(0);
+    .bottom-sheet.open {
+      transform: translateY(0);
     }
 
-    .drawer-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border-subtle);
+    .sheet-handle-bar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 6px 0;
+      cursor: pointer;
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-dark);
+    }
+
+    .sheet-header {
+      padding: 4px 18px 12px 18px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
 
-    .drawer-title-group h2 {
-      font-size: 17px;
+    .sheet-title-group h3 {
+      font-size: 16px;
       font-weight: 700;
-      color: var(--text-main);
-      margin-top: 4px;
+      color: var(--text);
+      margin-top: 2px;
     }
 
-    .close-btn {
-      background: transparent;
-      border: none;
-      font-size: 20px;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
-
-    .close-btn:hover {
-      background: var(--bg-surface);
-      color: var(--text-main);
-    }
-
-    .drawer-body {
-      padding: 24px;
+    .sheet-content {
+      padding: 16px 18px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      flex: 1;
+      gap: 14px;
     }
 
-    .drawer-section h4 {
-      font-size: 11px;
+    .sheet-section h4 {
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
-    .drawer-section p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+    .sheet-section p {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.45;
     }
 
-    .metric-grid {
+    .sheet-metric-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
     }
 
-    .metric-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+    .sheet-metric-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 10px;
+      padding: 8px 6px;
       text-align: center;
     }
 
-    .metric-box .label {
-      font-size: 10px;
+    .sheet-metric-box .label {
+      font-size: 9px;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 600;
     }
 
-    .metric-box .value {
-      font-size: 15px;
+    .sheet-metric-box .val {
+      font-size: 13px;
       font-weight: 700;
-      font-family: var(--font-mono);
-      color: var(--text-main);
+      font-family: var(--mono);
+      color: var(--text);
       margin-top: 2px;
     }
 
-    .quote-box {
-      border-left: 3px solid #0f172a;
-      background: var(--bg-surface);
-      padding: 12px 16px;
+    .sheet-quote-box {
+      border-left: 2.5px solid var(--text);
+      background: var(--bg-subtle);
+      padding: 10px 12px;
       border-radius: 0 6px 6px 0;
       font-size: 12px;
       font-style: italic;
-      color: var(--text-main);
-      line-height: 1.5;
+      color: var(--text);
     }
 
-    .quote-author {
-      font-size: 11px;
+    .sheet-quote-box .auth {
+      font-size: 10px;
       font-style: normal;
+      font-family: var(--mono);
       color: var(--text-muted);
-      margin-top: 6px;
-      font-family: var(--font-mono);
-    }
-
-    /* Responsiveness */
-    @media (max-width: 1024px) {
-      .matrix-layout {
-        grid-template-columns: 1fr;
-      }
-      .clusters-grid {
-        grid-template-columns: 1fr;
-      }
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header Navigation -->
+  <!-- Sticky Mobile Header -->
   <header>
-    <div class="brand">
-      <h1>Optimizing Structural Design Workflows: Waste Analysis</h1>
-      <p>DTU Master Thesis — Zacharias Helgren Dahl • Mixed-Methods Sequential Study (N=34)</p>
-    </div>
-    <nav class="nav-tabs">
-      <button class="nav-btn active" data-tab="tab-matrix">Waste Severity Matrix</button>
-      <button class="nav-btn" data-tab="tab-rankings">WSI &amp; Impact Rankings</button>
-      <button class="nav-btn" data-tab="tab-ram">Stakeholder Responsibility Matrix</button>
-      <button class="nav-btn" data-tab="tab-clusters">Lean Clusters &amp; Tools</button>
-    </nav>
+    <h1>SE Design Waste Framework</h1>
+    <p>DTU Thesis • Zacharias Helgren Dahl (N=34)[cite: 1]</p>
   </header>
 
   <main>
 
-    <!-- TAB 1: WASTE SEVERITY MATRIX -->
-    <section id="tab-matrix" class="view-panel active">
-      <div class="view-header">
-        <div>
-          <h2>Waste Severity Matrix (Impact vs. Frequency)</h2>
-          <p>Mapping Combined Impact Score ($S$, x-axis) against Frequency of Occurrence ($F$, y-axis) across N=34 structural engineers.</p>
-        </div>
-        <div class="badge badge-c0">Quadrants split at 2.50</div>
+    <!-- VIEW 1: MATRIX -->
+    <section id="view-matrix" class="view-section active">
+      <div class="section-title">
+        <h2>Severity Matrix (S vs F)</h2>
+        <p>Impact Score ($S$, x-axis)[cite: 1] vs Frequency ($F$, y-axis)[cite: 1] (Midpoint: 2.5)[cite: 1]</p>
       </div>
 
-      <div class="matrix-layout">
-        <div class="matrix-chart-card">
-          <div class="toolbar">
-            <div class="tool-group">
-              <span>Dataset View:</span>
-              <button class="btn-toggle active" id="btn-view-combined">Combined (N=34)</button>
-              <button class="btn-toggle" id="btn-view-regions">US (n=13) vs DK (n=21)</button>
-            </div>
-            <div class="tool-group">
-              <span>Trends Overlay:</span>
-              <button class="btn-toggle active" id="btn-trend-all">All Points</button>
-              <button class="btn-toggle" id="btn-trend-a">Trend A: Inverse</button>
-              <button class="btn-toggle" id="btn-trend-b">Trend B: Positive</button>
-            </div>
-          </div>
+      <!-- Scrollable Filters -->
+      <div class="filter-scroll">
+        <button class="chip active" id="btn-mat-comb">Combined (N=34)[cite: 1]</button>
+        <button class="chip" id="btn-mat-reg">US vs DK[cite: 1]</button>
+        <button class="chip" id="btn-mat-all">All Items</button>
+        <button class="chip" id="btn-mat-ta">Trend A (Inverse)[cite: 1]</button>
+        <button class="chip" id="btn-mat-tb">Trend B (Positive)[cite: 1]</button>
+      </div>
 
-          <div class="matrix-svg-wrapper">
-            <svg id="matrix-svg" class="chart-canvas" viewBox="0 0 700 560"></svg>
-          </div>
+      <div class="chart-card">
+        <svg id="mobile-svg-matrix" class="matrix-svg" viewBox="0 0 340 340"></svg>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:center;">
+          Tap any number marker to inspect activity details[cite: 1]
         </div>
+      </div>
 
-        <div class="matrix-sidebar">
-          <div class="info-card">
-            <h3>Matrix Dynamics (Figure 5.15 &amp; 5.16)</h3>
-            <p>The matrix splits at the Likert midpoint of 2.5 on both axes. Two distinct behavioral trajectories emerge from practitioner evaluations[cite: 1]:</p>
-            <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
-              <div style="font-size:12px; line-height:1.4;">
-                <strong style="color:var(--text-main);">Trend A (Inverse Relationship):</strong> High-frequency activities concentrate in lower impact zones, while severe activities remain confined to lower frequency zones[cite: 1].
-              </div>
-              <div style="font-size:12px; line-height:1.4;">
-                <strong style="color:var(--text-main);">Trend B (Positive Outliers):</strong> WA1 (Late Architectural Changes) sits isolated as high-impact and high-frequency[cite: 1]; WA19 (Unnecessary Travel) sits isolated as low-impact and low-frequency[cite: 1].
-              </div>
-            </div>
-          </div>
-
-          <div class="info-card">
-            <h3>Sample Statistics (p. 55-56)[cite: 1]</h3>
-            <div class="info-stat-row">
-              <span>Total Sample (N)</span>
-              <strong>34[cite: 1]</strong>
-            </div>
-            <div class="info-stat-row">
-              <span>Denmark (Sweco, Niras, Holst)</span>
-              <strong>21 (61.8%)[cite: 1]</strong>
-            </div>
-            <div class="info-stat-row">
-              <span>United States (KPFF)</span>
-              <strong>13 (38.2%)[cite: 1]</strong>
-            </div>
-            <div class="info-stat-row">
-              <span>Global ICC(2,k) Absolute</span>
-              <strong>0.775 [0.69, 0.84][cite: 1]</strong>
-            </div>
-            <div class="info-stat-row">
-              <span>Global ICC(2,k) Consistency</span>
-              <strong>0.810 [0.74, 0.87][cite: 1]</strong>
-            </div>
-          </div>
-
-          <div class="info-card">
-            <h3>Selected Waste Activity</h3>
-            <div id="matrix-quick-info">
-              <p style="font-size:12px; color:var(--text-muted);">Click on any point in the matrix to inspect its full details, metrics, and quotes directly from the report[cite: 1].</p>
-            </div>
-          </div>
+      <div style="margin-top:14px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:12px;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px;">
+          Matrix Dynamics (Report p. 63-65)[cite: 1]
         </div>
+        <p style="font-size:12px; color:var(--text); line-height:1.4;">
+          <strong>Trend A:</strong> High frequency activities cluster at lower impact, while high-impact wastes show lower occurrence[cite: 1].<br>
+          <strong>Trend B:</strong> WA1 (Late Arch. Changes) is the standalone high-impact + high-frequency outlier[cite: 1]. WA19 sits isolated as low-impact + low-frequency[cite: 1].
+        </p>
       </div>
     </section>
 
-    <!-- TAB 2: WSI & METRIC RANKINGS -->
-    <section id="tab-rankings" class="view-panel">
-      <div class="view-header">
-        <div>
-          <h2>Waste Severity Index (WSI) &amp; Dimensional Rankings</h2>
-          <p>Mathematical prioritization: $WSI = S \times F = \left(\frac{I_{\text{Cost}} + I_{\text{Schedule}} + I_{\text{Quality}}}{3}\right) \times F$ (Scale 1.0 to 16.0)[cite: 1].</p>
-        </div>
-        <div class="badge badge-c0">N=34 Structural Engineers[cite: 1]</div>
+    <!-- VIEW 2: RANKINGS -->
+    <section id="view-rankings" class="view-section">
+      <div class="section-title">
+        <h2>Rankings &amp; WSI</h2>
+        <p>Formula: $WSI = S \times F = \frac{\text{Cost} + \text{Sched} + \text{Qual}}{3} \times F$[cite: 1]</p>
       </div>
 
-      <div class="table-container">
-        <table class="data-table" id="rankings-table">
-          <thead>
-            <tr>
-              <th data-sort="wsiRank">WSI Rank ▲▼[cite: 1]</th>
-              <th data-sort="id">ID ▲▼[cite: 1]</th>
-              <th data-sort="name">Waste Activity Name ▲▼[cite: 1]</th>
-              <th data-sort="cluster">Operational Cluster ▲▼[cite: 1]</th>
-              <th data-sort="cost">Cost Impact ▲▼[cite: 1]</th>
-              <th data-sort="schedule">Sched. Impact ▲▼[cite: 1]</th>
-              <th data-sort="quality">Qual. Impact ▲▼[cite: 1]</th>
-              <th data-sort="s">Combined S ▲▼[cite: 1]</th>
-              <th data-sort="f">Freq F ▲▼[cite: 1]</th>
-              <th data-sort="wsi">WSI Score ▲▼[cite: 1]</th>
-            </tr>
-          </thead>
-          <tbody id="rankings-tbody"></tbody>
-        </table>
+      <div class="filter-scroll" id="rankings-filter-scroll">
+        <button class="chip active" data-filter="all">All (19)[cite: 1]</button>
+        <button class="chip" data-filter="1">Cluster 1[cite: 1]</button>
+        <button class="chip" data-filter="2">Cluster 2[cite: 1]</button>
+        <button class="chip" data-filter="3">Cluster 3[cite: 1]</button>
+        <button class="chip" data-filter="4">Cluster 4[cite: 1]</button>
       </div>
+
+      <div class="card-list" id="rankings-card-list"></div>
     </section>
 
-    <!-- TAB 3: STAKEHOLDER RESPONSIBILITY MATRIX -->
-    <section id="tab-ram" class="view-panel">
-      <div class="view-header">
-        <div>
-          <h2>Stakeholder Responsibility Assignment Matrix (Table 6.4)</h2>
-          <p>Governance of waste mitigation across project roles: <strong>P</strong> = Perform, <strong>C</strong> = Contribute / Affected, <strong>A</strong> = Approve[cite: 1].</p>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <span class="badge" style="background:#e0f2fe; color:#0284c7;">P: Perform[cite: 1]</span>
-          <span class="badge" style="background:#fef3c7; color:#d97706;">C: Contribute / Affected[cite: 1]</span>
-          <span class="badge" style="background:#fee2e2; color:#dc2626;">A: Approve[cite: 1]</span>
-        </div>
+    <!-- VIEW 3: STAKEHOLDERS (RAM) -->
+    <section id="view-ram" class="view-section">
+      <div class="section-title">
+        <h2>Responsibility Matrix</h2>
+        <p>Mitigation roles (Table 6.4): Perform (P), Contribute (C), Approve (A)[cite: 1]</p>
       </div>
-
-      <div class="table-container">
-        <table class="data-table" id="ram-table">
-          <thead>
-            <tr>
-              <th>ID[cite: 1]</th>
-              <th>Waste Activity[cite: 1]</th>
-              <th>Origin[cite: 1]</th>
-              <th style="text-align:center;">Client[cite: 1]</th>
-              <th style="text-align:center;">Architect[cite: 1]</th>
-              <th style="text-align:center;">MEP[cite: 1]</th>
-              <th style="text-align:center;">Structural Eng.[cite: 1]</th>
-              <th style="text-align:center;">BIM[cite: 1]</th>
-              <th style="text-align:center;">QA / AHJ[cite: 1]</th>
-              <th style="text-align:center;">Contractor[cite: 1]</th>
-            </tr>
-          </thead>
-          <tbody id="ram-tbody"></tbody>
-        </table>
-      </div>
+      <div class="card-list" id="ram-card-list"></div>
     </section>
 
-    <!-- TAB 4: LEAN IMPROVEMENT CLUSTERS -->
-    <section id="tab-clusters" class="view-panel">
-      <div class="view-header">
-        <div>
-          <h2>Operational Clusters &amp; Lean Construction Tool Mapping</h2>
-          <p>Aggregated problem-solution spaces synthesized through the 14 Toyota Way Management Principles (pp. 86–89)[cite: 1].</p>
-        </div>
-        <div class="badge badge-c0">Top 5 Unranked Tools per Cluster[cite: 1]</div>
+    <!-- VIEW 4: LEAN CLUSTERS -->
+    <section id="view-clusters" class="view-section">
+      <div class="section-title">
+        <h2>Lean Improvement Clusters</h2>
+        <p>Top 5 mapped Lean tools per operational domain (pp. 86–89)[cite: 1]</p>
       </div>
-
-      <div class="clusters-grid" id="clusters-container">
-        <!-- Rendered via JavaScript -->
-      </div>
+      <div id="clusters-card-list"></div>
     </section>
 
   </main>
 
-  <!-- Slide-Over Inspection Drawer -->
-  <div class="drawer-overlay" id="drawer-overlay"></div>
-  <aside class="drawer" id="drawer">
-    <div class="drawer-header">
-      <div class="drawer-title-group">
-        <span class="badge" id="drawer-badge">WA0</span>
-        <h2 id="drawer-title">Activity Title</h2>
-      </div>
-      <button class="close-btn" id="drawer-close">&times;</button>
+  <!-- Bottom App Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-view="view-matrix">
+      <span class="nav-icon">⚏</span>
+      <span class="nav-label">Matrix</span>
+    </button>
+    <button class="nav-item" data-view="view-rankings">
+      <span class="nav-icon">≡</span>
+      <span class="nav-label">Rankings</span>
+    </button>
+    <button class="nav-item" data-view="view-ram">
+      <span class="nav-icon">⨁</span>
+      <span class="nav-label">RAM</span>
+    </button>
+    <button class="nav-item" data-view="view-clusters">
+      <span class="nav-icon">◈</span>
+      <span class="nav-label">Lean Tools</span>
+    </button>
+  </nav>
+
+  <!-- Native Bottom Sheet Modal -->
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  <div class="bottom-sheet" id="bottom-sheet">
+    <div class="sheet-handle-bar" id="sheet-handle-bar">
+      <div class="sheet-handle"></div>
     </div>
-    <div class="drawer-body">
-      <div class="drawer-section">
+    <div class="sheet-header">
+      <div class="sheet-title-group">
+        <span class="badge" id="sheet-badge">WA0</span>
+        <h3 id="sheet-title">Waste Title</h3>
+      </div>
+    </div>
+    <div class="sheet-content">
+      <div class="sheet-section">
         <h4>Report Description (Table 5.4)[cite: 1]</h4>
-        <p id="drawer-desc">-</p>
+        <p id="sheet-desc">-</p>
       </div>
 
-      <div class="drawer-section">
-        <h4>Evaluation Metrics (Scale: 1.0 – 4.0)[cite: 1]</h4>
-        <div class="metric-grid">
-          <div class="metric-box">
-            <div class="label">Cost Impact[cite: 1]</div>
-            <div class="value" id="m-cost">-</div>
+      <div class="sheet-section">
+        <h4>Quantitative Evaluation (1.0–4.0 scale)[cite: 1]</h4>
+        <div class="sheet-metric-grid">
+          <div class="sheet-metric-box">
+            <div class="label">Cost[cite: 1]</div>
+            <div class="val" id="sm-cost">-</div>
           </div>
-          <div class="metric-box">
-            <div class="label">Sched. Impact[cite: 1]</div>
-            <div class="value" id="m-sched">-</div>
+          <div class="sheet-metric-box">
+            <div class="label">Schedule[cite: 1]</div>
+            <div class="val" id="sm-sched">-</div>
           </div>
-          <div class="metric-box">
-            <div class="label">Qual. Impact[cite: 1]</div>
-            <div class="value" id="m-qual">-</div>
+          <div class="sheet-metric-box">
+            <div class="label">Quality[cite: 1]</div>
+            <div class="val" id="sm-qual">-</div>
           </div>
-          <div class="metric-box">
+          <div class="sheet-metric-box">
             <div class="label">Combined (S)[cite: 1]</div>
-            <div class="value" id="m-s">-</div>
+            <div class="val" id="sm-s" style="color:#0284c7;">-</div>
           </div>
-          <div class="metric-box">
+          <div class="sheet-metric-box">
             <div class="label">Frequency (F)[cite: 1]</div>
-            <div class="value" id="m-f">-</div>
+            <div class="val" id="sm-f" style="color:#d97706;">-</div>
           </div>
-          <div class="metric-box" style="background:#f1f5f9;">
+          <div class="sheet-metric-box">
             <div class="label">WSI Score[cite: 1]</div>
-            <div class="value" id="m-wsi" style="color:#0f172a;">-</div>
+            <div class="val" id="sm-wsi" style="color:#0f172a;">-</div>
           </div>
         </div>
       </div>
 
-      <div class="drawer-section">
+      <div class="sheet-section">
         <h4>Operational Classification[cite: 1]</h4>
-        <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
-          <div><strong style="color:var(--text-main);">Cluster:</strong> <span id="drawer-cluster">-</span></div>
-          <div><strong style="color:var(--text-main);">Process Origin:</strong> <span id="drawer-origin">-</span></div>
-          <div><strong style="color:var(--text-main);">8 Lean Wastes:</strong> <span id="drawer-leanwastes">-</span></div>
-        </div>
+        <p style="font-size:11px; line-height:1.6;">
+          <strong>Cluster:</strong> <span id="sheet-cluster">-</span><br>
+          <strong>Origin:</strong> <span id="sheet-origin">-</span><br>
+          <strong>8 Lean Wastes:</strong> <span id="sheet-leanwastes">-</span>
+        </p>
       </div>
 
-      <div class="drawer-section">
-        <h4>Stakeholder Authority &amp; Mitigation Role (Table 6.4)[cite: 1]</h4>
-        <div id="drawer-stakeholders" class="stakeholder-tag-row"></div>
+      <div class="sheet-section">
+        <h4>Stakeholder Authority &amp; Mitigation (Table 6.4)[cite: 1]</h4>
+        <div id="sheet-ram-details" style="font-size:11px; font-family:var(--mono); display:flex; flex-wrap:wrap; gap:4px;"></div>
       </div>
 
-      <div class="drawer-section" id="drawer-quote-section" style="display:none;">
+      <div class="sheet-section" id="sheet-quote-section" style="display:none;">
         <h4>Practitioner Account from Interviews[cite: 1]</h4>
-        <div class="quote-box">
-          <p id="drawer-quote">Quote text</p>
-          <div class="quote-author" id="drawer-quote-author">Participant</div>
+        <div class="sheet-quote-box">
+          <p id="sheet-quote">-</p>
+          <div class="auth" id="sheet-quote-auth">-</div>
         </div>
       </div>
     </div>
-  </aside>
+  </div>
 
   <script>
-    // Exact Empirical Dataset from Zacharias Helgren Dahl Master's Thesis (DTU, 2026)
-    const WASTE_ACTIVITIES = [
+    // Exact Empirical Dataset from Zacharias Helgren Dahl DTU Master's Thesis (2026)
+    const ACTIVITIES = [
       {
-        id: "WA1",
-        num: 1,
-        name: "Late Architectural Changes",
+        id: "WA1", num: 1, name: "Late Architectural Changes",
         desc: "Rework caused by architects changing building footprints, layouts, or parameters late in the process.",
-        cluster: 1,
-        origin: "External",
-        cost: 3.12,
-        schedule: 3.38,
-        quality: 2.78,
-        s: 3.10,
-        f: 2.91,
-        wsi: 9.02,
-        wsiRank: 1,
-        us: { s: 3.08, f: 3.08 },
-        dk: { s: 3.11, f: 2.81 },
+        cluster: 1, origin: "External",
+        cost: 3.12, schedule: 3.38, quality: 2.78, s: 3.10, f: 2.91, wsi: 9.02, rank: 1,
+        us: { s: 3.08, f: 3.08 }, dk: { s: 3.11, f: 2.81 },
         leanWastes: ["Defects", "Overproduction", "Waiting"],
-        ram: { cli: "A", arch: "P", mep: "-", str: "C", bim: "C", qa: "-", con: "C" },
+        ram: { Cli: "A", Arch: "P", MEP: "-", Str: "C", BIM: "C", QA: "-", Con: "C" },
         quote: "Late architectural modifications systematically disrupt schedules and force structural redesign across previously finalized calculations.",
         quoteAuthor: "Survey & Validation Interviews (VI1, VI3, VI4, VI6, VI7)"
       },
       {
-        id: "WA2",
-        num: 2,
-        name: "Mid-Project Owner / Scope Changes",
+        id: "WA2", num: 2, name: "Mid-Project Owner / Scope Changes",
         desc: "Changes mandated by owners, tenants, or technical requirements during construction.",
-        cluster: 1,
-        origin: "External",
-        cost: 3.05,
-        schedule: 3.37,
-        quality: 2.55,
-        s: 3.13,
-        f: 1.78,
-        wsi: 5.57,
-        wsiRank: 6,
-        us: { s: 3.50, f: 1.88 },
-        dk: { s: 3.00, f: 1.67 },
+        cluster: 1, origin: "External",
+        cost: 3.05, schedule: 3.37, quality: 2.55, s: 3.13, f: 1.78, wsi: 5.57, rank: 6,
+        us: { s: 3.50, f: 1.88 }, dk: { s: 3.00, f: 1.67 },
         leanWastes: ["Defects", "Waiting", "Overproduction"],
-        ram: { cli: "P", arch: "C", mep: "-", str: "C", bim: "C", qa: "-", con: "C" },
+        ram: { Cli: "P", Arch: "C", MEP: "-", Str: "C", BIM: "C", QA: "-", Con: "C" },
         quote: "Når der sker nogle ting, eller et eller andet, som ikke lige er planlagt; det har ikke så stor betydning for cost, fordi det er som regel er noget vi får ekstra penge for.",
         quoteAuthor: "Validation Interviewee 1 (VI1)"
       },
       {
-        id: "WA3",
-        num: 3,
-        name: "External Communication & RFI Issues",
+        id: "WA3", num: 3, name: "External Communication & RFI Issues",
         desc: "Stalled progress caused by waiting for external clarifications or deciphering poorly labeled markups.",
-        cluster: 1,
-        origin: "External",
-        cost: 2.31,
-        schedule: 2.68,
-        quality: 2.41,
-        s: 2.47,
-        f: 2.45,
-        wsi: 6.05,
-        wsiRank: 3,
-        us: { s: 2.46, f: 2.46 },
-        dk: { s: 2.48, f: 2.43 },
+        cluster: 1, origin: "External",
+        cost: 2.31, schedule: 2.68, quality: 2.41, s: 2.47, f: 2.45, wsi: 6.05, rank: 3,
+        us: { s: 2.46, f: 2.46 }, dk: { s: 2.48, f: 2.43 },
         leanWastes: ["Waiting", "Defects", "Extra Processing"],
-        ram: { cli: "A", arch: "C", mep: "-", str: "P", bim: "C", qa: "-", con: "P" },
+        ram: { Cli: "A", Arch: "C", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "P" },
         quote: "Progress stalls while awaiting contractor clarifications or resolving ambiguous architectural RFIs.",
         quoteAuthor: "Exploratory & Validation Synthesis"
       },
       {
-        id: "WA4",
-        num: 4,
-        name: "MEP Coordination Delays",
+        id: "WA4", num: 4, name: "MEP Coordination Delays",
         desc: "Delays caused by late Mechanical, Electrical, and Plumbing (MEP) structural requirements.",
-        cluster: 1,
-        origin: "External",
-        cost: 2.52,
-        schedule: 2.82,
-        quality: 2.58,
-        s: 2.64,
-        f: 2.24,
-        wsi: 5.91,
-        wsiRank: 4,
-        us: { s: 2.67, f: 2.23 },
-        dk: { s: 2.62, f: 2.24 },
+        cluster: 1, origin: "External",
+        cost: 2.52, schedule: 2.82, quality: 2.58, s: 2.64, f: 2.24, wsi: 5.91, rank: 4,
+        us: { s: 2.67, f: 2.23 }, dk: { s: 2.62, f: 2.24 },
         leanWastes: ["Waiting", "Defects"],
-        ram: { cli: "-", arch: "A", mep: "P", str: "C", bim: "C", qa: "-", con: "C" },
+        ram: { Cli: "-", Arch: "A", MEP: "P", Str: "C", BIM: "C", QA: "-", Con: "C" },
         quote: "Heavy coordination friction occurs around structural penetrations and late MEP duct routing changes.",
         quoteAuthor: "KPFF Qualitative Baseline"
       },
       {
-        id: "WA5",
-        num: 5,
-        name: "Software Constraints",
+        id: "WA5", num: 5, name: "Software Constraints",
         desc: "Software limitations blocking access to raw data, forcing manual workarounds.",
-        cluster: 2,
-        origin: "Internal",
-        cost: 2.18,
-        schedule: 2.36,
-        quality: 2.12,
-        s: 2.22,
-        f: 2.00,
-        wsi: 4.44,
-        wsiRank: 16,
-        us: { s: 2.11, f: 2.15 },
-        dk: { s: 2.31, f: 1.81 },
+        cluster: 2, origin: "Internal",
+        cost: 2.18, schedule: 2.36, quality: 2.12, s: 2.22, f: 2.00, wsi: 4.44, rank: 16,
+        us: { s: 2.11, f: 2.15 }, dk: { s: 2.31, f: 1.81 },
         leanWastes: ["Extra Processing", "Non-Utilized Talent"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "P", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "P", QA: "-", Con: "-" },
         quote: "Enterprise licenses or easy manual workarounds reduce the operational impact.",
         quoteAuthor: "Validation Interviewees (VI4, VI7)"
       },
       {
-        id: "WA6",
-        num: 6,
-        name: "Manual Data Workflows",
+        id: "WA6", num: 6, name: "Manual Data Workflows",
         desc: "Time lost on manual data entry and poor software-to-software connections.",
-        cluster: 2,
-        origin: "Internal",
-        cost: 2.44,
-        schedule: 2.50,
-        quality: 2.26,
-        s: 2.40,
-        f: 2.34,
-        wsi: 5.62,
-        wsiRank: 5,
-        us: { s: 2.32, f: 2.42 },
-        dk: { s: 2.43, f: 2.48 },
+        cluster: 2, origin: "Internal",
+        cost: 2.44, schedule: 2.50, quality: 2.26, s: 2.40, f: 2.34, wsi: 5.62, rank: 5,
+        us: { s: 2.32, f: 2.42 }, dk: { s: 2.43, f: 2.48 },
         leanWastes: ["Motion", "Transportation", "Extra Processing"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "P", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "P", QA: "-", Con: "-" },
         quote: "Manual transfer between calculation packages and documentation spreadsheets wastes valuable engineering time.",
         quoteAuthor: "KPFF Interview Records"
       },
       {
-        id: "WA7",
-        num: 7,
-        name: "Inefficient Model Transfers",
+        id: "WA7", num: 7, name: "Inefficient Model Transfers",
         desc: "Manually moving 3D (BIM) models between different cloud platforms.",
-        cluster: 2,
-        origin: "Internal",
-        cost: 1.82,
-        schedule: 2.00,
-        quality: 1.98,
-        s: 1.93,
-        f: 1.88,
-        wsi: 3.63,
-        wsiRank: 18,
-        us: { s: 1.82, f: 2.00 },
-        dk: { s: 2.01, f: 1.81 },
+        cluster: 2, origin: "Internal",
+        cost: 1.82, schedule: 2.00, quality: 1.98, s: 1.93, f: 1.88, wsi: 3.63, rank: 18,
+        us: { s: 1.82, f: 2.00 }, dk: { s: 2.01, f: 1.81 },
         leanWastes: ["Transportation", "Motion"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "P", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "P", QA: "-", Con: "-" },
         quote: "Handling disconnected cloud repositories and downloading/uploading massive IFC/Revit models.",
         quoteAuthor: "BIM Manager Interview (EI4)"
       },
       {
-        id: "WA8",
-        num: 8,
-        name: "Repetitive Parameter Loops",
+        id: "WA8", num: 8, name: "Repetitive Parameter Loops",
         desc: "Manual cycles of adjusting sizes, running models, and reviewing results.",
-        cluster: 2,
-        origin: "Internal",
-        cost: 2.25,
-        schedule: 2.35,
-        quality: 2.06,
-        s: 2.22,
-        f: 2.38,
-        wsi: 5.28,
-        wsiRank: 9,
-        us: { s: 1.90, f: 2.23 },
-        dk: { s: 2.40, f: 2.48 },
+        cluster: 2, origin: "Internal",
+        cost: 2.25, schedule: 2.35, quality: 2.06, s: 2.22, f: 2.38, wsi: 5.28, rank: 9,
+        us: { s: 1.90, f: 2.23 }, dk: { s: 2.40, f: 2.48 },
         leanWastes: ["Extra Processing", "Overproduction"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "P", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "P", QA: "-", Con: "-" },
         quote: "Iteratively updating geometry in analysis software, re-running FEA meshes, and comparing code compliance manually.",
         quoteAuthor: "Junior Engineer (EI1)"
       },
       {
-        id: "WA9",
-        num: 9,
-        name: "Redundant Calculations",
+        id: "WA9", num: 9, name: "Redundant Calculations",
         desc: "Performing manual math for items that the core software could solve if data were connected.",
-        cluster: 2,
-        origin: "Internal",
-        cost: 2.20,
-        schedule: 2.62,
-        quality: 1.83,
-        s: 2.22,
-        f: 2.41,
-        wsi: 5.35,
-        wsiRank: 12,
-        us: { s: 2.08, f: 2.38 },
-        dk: { s: 2.31, f: 2.43 },
+        cluster: 2, origin: "Internal",
+        cost: 2.20, schedule: 2.62, quality: 1.83, s: 2.22, f: 2.41, wsi: 5.35, rank: 12,
+        us: { s: 2.08, f: 2.38 }, dk: { s: 2.31, f: 2.43 },
         leanWastes: ["Overproduction", "Extra Processing"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "-", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "-", QA: "-", Con: "-" },
         quote: "Separate hand checks and Mathcad routines executed because data does not propagate from the central structural model.",
         quoteAuthor: "Senior Structural Engineer (EI5)"
       },
       {
-        id: "WA10",
-        num: 10,
-        name: "Manual Admin Tasks",
+        id: "WA10", num: 10, name: "Manual Admin Tasks",
         desc: "Non-billable time spent filing emails, PDFs, and tracking project stages.",
-        cluster: 2,
-        origin: "Internal",
-        cost: 2.22,
-        schedule: 1.98,
-        quality: 1.65,
-        s: 1.95,
-        f: 2.79,
-        wsi: 5.44,
-        wsiRank: 7,
-        us: { s: 1.73, f: 2.92 },
-        dk: { s: 2.10, f: 2.71 },
+        cluster: 2, origin: "Internal",
+        cost: 2.22, schedule: 1.98, quality: 1.65, s: 1.95, f: 2.79, wsi: 5.44, rank: 7,
+        us: { s: 1.73, f: 2.92 }, dk: { s: 2.10, f: 2.71 },
         leanWastes: ["Motion", "Inventory"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "P", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "P", QA: "-", Con: "-" },
         quote: "High frequency occurrence of manual filing, tracking project stages, and document archiving.",
         quoteAuthor: "Survey & Interview Baseline"
       },
       {
-        id: "WA11",
-        num: 11,
-        name: "Errors in Deliverables",
+        id: "WA11", num: 11, name: "Errors in Deliverables",
         desc: "Math or drawing mistakes identified in final client documents.",
-        cluster: 3,
-        origin: "External",
-        cost: 3.01,
-        schedule: 2.80,
-        quality: 2.88,
-        s: 2.90,
-        f: 1.59,
-        wsi: 4.61,
-        wsiRank: 15,
-        us: { s: 2.75, f: 1.46 },
-        dk: { s: 2.90, f: 1.71 },
+        cluster: 3, origin: "External",
+        cost: 3.01, schedule: 2.80, quality: 2.88, s: 2.90, f: 1.59, wsi: 4.61, rank: 15,
+        us: { s: 2.75, f: 1.46 }, dk: { s: 2.90, f: 1.71 },
         leanWastes: ["Defects"],
-        ram: { cli: "-", arch: "C", mep: "-", str: "P", bim: "P", qa: "A", con: "C" },
+        ram: { Cli: "-", Arch: "C", MEP: "-", Str: "P", BIM: "P", QA: "A", Con: "C" },
         quote: "Low frequency but severe downstream cost and quality impact once erroneous drawings reach construction site.",
         quoteAuthor: "Associate / PM (EI2)"
       },
       {
-        id: "WA12",
-        num: 12,
-        name: "Over-Optimization / Engineering",
+        id: "WA12", num: 12, name: "Over-Optimization / Engineering",
         desc: "Designing unique parts instead of using standards or over-detailing early designs.",
-        cluster: 3,
-        origin: "Internal",
-        cost: 2.67,
-        schedule: 2.82,
-        quality: 2.35,
-        s: 2.61,
-        f: 2.01,
-        wsi: 5.25,
-        wsiRank: 10,
-        us: { s: 2.84, f: 1.81 },
-        dk: { s: 2.40, f: 2.05 },
+        cluster: 3, origin: "Internal",
+        cost: 2.67, schedule: 2.82, quality: 2.35, s: 2.61, f: 2.01, wsi: 5.25, rank: 10,
+        us: { s: 2.84, f: 1.81 }, dk: { s: 2.40, f: 2.05 },
         leanWastes: ["Overproduction", "Extra Processing"],
-        ram: { cli: "C", arch: "C", mep: "-", str: "P", bim: "-", qa: "-", con: "C" },
+        ram: { Cli: "C", Arch: "C", MEP: "-", Str: "P", BIM: "-", QA: "-", Con: "C" },
         quote: "Aiming for perfection or accommodating endless sustainability variants consumes unnecessary engineering hours.",
         quoteAuthor: "Validation Interviewees (VI1, VI5)"
       },
       {
-        id: "WA13",
-        num: 13,
-        name: "Too Early Detailing & Estimating",
+        id: "WA13", num: 13, name: "Too Early Detailing & Estimating",
         desc: "Calculating material amounts or adding great detail before design finalization.",
-        cluster: 3,
-        origin: "Internal",
-        cost: 2.43,
-        schedule: 2.07,
-        quality: 2.01,
-        s: 2.17,
-        f: 1.82,
-        wsi: 3.95,
-        wsiRank: 17,
-        us: { s: 2.21, f: 1.65 },
-        dk: { s: 2.10, f: 1.95 },
+        cluster: 3, origin: "Internal",
+        cost: 2.43, schedule: 2.07, quality: 2.01, s: 2.17, f: 1.82, wsi: 3.95, rank: 17,
+        us: { s: 2.21, f: 1.65 }, dk: { s: 2.10, f: 1.95 },
         leanWastes: ["Overproduction", "Inventory"],
-        ram: { cli: "-", arch: "C", mep: "-", str: "P", bim: "C", qa: "-", con: "A" },
+        ram: { Cli: "-", Arch: "C", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "A" },
         quote: "Premature detailing before architectural massing is frozen triggers extensive throwaway work.",
         quoteAuthor: "KPFF Qualitative Interviews"
       },
       {
-        id: "WA14",
-        num: 14,
-        name: "Lost Design History & Change Context",
+        id: "WA14", num: 14, name: "Lost Design History & Change Context",
         desc: "Loss of reasoning behind early choices and revision history buried in single files.",
-        cluster: 3,
-        origin: "External",
-        cost: 2.34,
-        schedule: 2.26,
-        quality: 2.70,
-        s: 2.43,
-        f: 2.09,
-        wsi: 5.08,
-        wsiRank: 13,
-        us: { s: 2.55, f: 2.23 },
-        dk: { s: 2.31, f: 2.14 },
+        cluster: 3, origin: "External",
+        cost: 2.34, schedule: 2.26, quality: 2.70, s: 2.43, f: 2.09, wsi: 5.08, rank: 13,
+        us: { s: 2.55, f: 2.23 }, dk: { s: 2.31, f: 2.14 },
         leanWastes: ["Non-Utilized Talent", "Defects"],
-        ram: { cli: "-", arch: "P", mep: "-", str: "P", bim: "P", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "P", MEP: "-", Str: "P", BIM: "P", QA: "-", Con: "-" },
         quote: "Taking over a project without understanding previous design decisions leads to substantial wasted time.",
         quoteAuthor: "Validation Interviewees (VI4, VI5)"
       },
       {
-        id: "WA15",
-        num: 15,
-        name: "Staff Shuffling",
+        id: "WA15", num: 15, name: "Staff Shuffling",
         desc: "Frequent movement of engineers between projects, causing knowledge loss and errors.",
-        cluster: 4,
-        origin: "Internal",
-        cost: 2.62,
-        schedule: 2.63,
-        quality: 3.04,
-        s: 2.76,
-        f: 1.91,
-        wsi: 5.27,
-        wsiRank: 8,
-        us: { s: 1.58, f: 2.54 },
-        dk: { s: 2.98, f: 2.10 },
+        cluster: 4, origin: "Internal",
+        cost: 2.62, schedule: 2.63, quality: 3.04, s: 2.76, f: 1.91, wsi: 5.27, rank: 8,
+        us: { s: 1.58, f: 2.54 }, dk: { s: 2.98, f: 2.10 },
         leanWastes: ["Non-Utilized Talent", "Motion", "Defects"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "C", qa: "-", con: "-" },
-        quote: "Some of that knowledge is lost because of it and then again can lead to errors and misunderstanding and just taking longer to do the actual project work, because each time you have someone new working on a project who's not familiar, they have to take the time to acquaint themselves with the actual projects... So it is inefficient in that way.",
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "-" },
+        quote: "Some of that knowledge is lost because of it and then again can lead to errors and misunderstanding and just taking longer to do the actual project work... So it is inefficient in that way.",
         quoteAuthor: "BIM Manager Interview (EI4)"
       },
       {
-        id: "WA16",
-        num: 16,
-        name: "Poor Work Delegation",
+        id: "WA16", num: 16, name: "Poor Work Delegation",
         desc: "Senior engineers performing routine tasks instead of utilizing their technical strengths.",
-        cluster: 4,
-        origin: "Internal",
-        cost: 2.46,
-        schedule: 2.35,
-        quality: 2.14,
-        s: 2.32,
-        f: 2.01,
-        wsi: 4.66,
-        wsiRank: 14,
-        us: { s: 2.41, f: 1.62 },
-        dk: { s: 2.25, f: 2.25 },
+        cluster: 4, origin: "Internal",
+        cost: 2.46, schedule: 2.35, quality: 2.14, s: 2.32, f: 2.01, wsi: 4.66, rank: 14,
+        us: { s: 2.41, f: 1.62 }, dk: { s: 2.25, f: 2.25 },
         leanWastes: ["Non-Utilized Talent"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "C", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "-" },
         quote: "Failing to assign the right experts early on sets the wrong direction, leading to rework.",
         quoteAuthor: "Validation Interviewees (VI4, VI6)"
       },
       {
-        id: "WA17",
-        num: 17,
-        name: "Meeting & Email Bloat",
+        id: "WA17", num: 17, name: "Meeting & Email Bloat",
         desc: "Excessive time spent in large meetings or processing long email threads.",
-        cluster: 4,
-        origin: "External",
-        cost: 2.22,
-        schedule: 1.98,
-        quality: 1.83,
-        s: 2.01,
-        f: 2.68,
-        wsi: 5.39,
-        wsiRank: 11,
-        us: { s: 1.92, f: 1.92 },
-        dk: { s: 2.26, f: 2.76 },
+        cluster: 4, origin: "External",
+        cost: 2.22, schedule: 1.98, quality: 1.83, s: 2.01, f: 2.68, wsi: 5.39, rank: 11,
+        us: { s: 1.92, f: 1.92 }, dk: { s: 2.26, f: 2.76 },
         leanWastes: ["Waiting", "Extra Processing"],
-        ram: { cli: "A", arch: "C", mep: "-", str: "P", bim: "C", qa: "-", con: "-" },
+        ram: { Cli: "A", Arch: "C", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "-" },
         quote: "Little impact to design quality and are easily ignored.",
         quoteAuthor: "Validation Interviewees (VI5, VI6)"
       },
       {
-        id: "WA18",
-        num: 18,
-        name: "Urgent Interruptions",
+        id: "WA18", num: 18, name: "Urgent Interruptions",
         desc: "Disruptions from 'hot' requests or broken tools that break cognitive focus.",
-        cluster: 4,
-        origin: "Internal",
-        cost: 2.52,
-        schedule: 2.89,
-        quality: 2.58,
-        s: 2.66,
-        f: 2.46,
-        wsi: 6.54,
-        wsiRank: 2,
-        us: { s: 2.54, f: 2.62 },
-        dk: { s: 2.75, f: 2.38 },
+        cluster: 4, origin: "Internal",
+        cost: 2.52, schedule: 2.89, quality: 2.58, s: 2.66, f: 2.46, wsi: 6.54, rank: 2,
+        us: { s: 2.54, f: 2.62 }, dk: { s: 2.75, f: 2.38 },
         leanWastes: ["Waiting", "Non-Utilized Talent"],
-        ram: { cli: "-", arch: "-", mep: "-", str: "P", bim: "C", qa: "-", con: "-" },
+        ram: { Cli: "-", Arch: "-", MEP: "-", Str: "P", BIM: "C", QA: "-", Con: "-" },
         quote: "Ranked 2nd highest on WSI index due to constant cognitive disruption across high impact and high frequency.",
         quoteAuthor: "Survey Analysis (p. 66)"
       },
       {
-        id: "WA19",
-        num: 19,
-        name: "Unnecessary Travel",
+        id: "WA19", num: 19, name: "Unnecessary Travel",
         desc: "Time wasted traveling to site visits or meetings that could be conducted remotely.",
-        cluster: 0, // Omitted
-        origin: "External",
-        cost: 2.09,
-        schedule: 1.65,
-        quality: 1.26,
-        s: 1.67,
-        f: 1.38,
-        wsi: 2.30,
-        wsiRank: 19,
-        us: { s: 1.58, f: 1.23 },
-        dk: { s: 1.71, f: 1.48 },
+        cluster: 0, origin: "External",
+        cost: 2.09, schedule: 1.65, quality: 1.26, s: 1.67, f: 1.38, wsi: 2.30, rank: 19,
+        us: { s: 1.58, f: 1.23 }, dk: { s: 1.71, f: 1.48 },
         leanWastes: ["Motion", "Transportation"],
-        ram: { cli: "A", arch: "-", mep: "-", str: "P", bim: "-", qa: "-", con: "P" },
+        ram: { Cli: "A", Arch: "-", MEP: "-", Str: "P", BIM: "-", QA: "-", Con: "P" },
         quote: "Isolated outlier exhibiting negligible impact and rare occurrence across US and Danish firms.",
         quoteAuthor: "Survey & Interview Analysis (p. 65, 78)"
       }
     ];
 
-    const CLUSTERS_DATA = [
+    const CLUSTERS = [
       {
-        num: 1,
-        title: "Cluster 1: External & Interdisciplinary Coordination",
-        desc: "Inefficiencies originating outside the structural engineering firm's direct control, requiring coordinated cross-disciplinary problem-solving.",
-        meanImpact: 2.80,
-        meanFreq: 2.40,
-        activities: ["WA1", "WA2", "WA3", "WA4"],
-        stakeholders: ["Client", "Architect", "MEP", "Structural Eng.", "BIM", "QA/AHJ", "Contractor"],
+        num: 1, title: "Cluster 1: External & Interdisciplinary",
+        desc: "Inefficiencies originating outside direct firm control, requiring multi-stakeholder problem solving.",
+        impact: 2.80, freq: 2.40,
         tools: [
-          { name: "Last Planner System (LPS)", desc: "Aims to create predictable and reliable schedules and workflow by empowering the people actually doing the work to plan and commit to specific, well-defined tasks." },
-          { name: "Obeya (Big Room)", desc: "The physical space where project stakeholders, designers, and contractors meet face to face and collaborate. In use in the US, less common in Denmark." },
-          { name: "Root Cause Analysis (RCA)", desc: "A process used to identify the underlying reasons for problems, aimed towards differentiating the symptoms of a problem from the underlying cause itself." },
-          { name: "A3 Problem Solving", desc: "A structured, visual management process that uses an A3 poster to force the user to condense the problem, analysis, proposed solution, and improvement plan onto a single sheet." },
-          { name: "Integrated Project Delivery (IPD)", desc: "A collaborative way of delivering projects that aligns all major stakeholders under a single multi-party contract." }
+          { name: "Last Planner System (LPS)", desc: "Creates reliable commitments and pull-scheduling across disciplines." },
+          { name: "Obeya (Big Room)", desc: "Physical/digital room for cross-functional alignment and immediate feedback." },
+          { name: "Root Cause Analysis (RCA)", desc: "Identifies core issues behind coordination breakdowns rather than treating symptoms." },
+          { name: "A3 Problem Solving", desc: "Structured one-page visual synthesis for interdisciplinary issues." },
+          { name: "Integrated Project Delivery (IPD)", desc: "Shared risk-and-reward contractual framework aligning stakeholders." }
         ]
       },
       {
-        num: 2,
-        title: "Cluster 2: Software and Data Management",
-        desc: "Waste rooted in disconnected software platforms, manual data/information handling & inefficient workarounds/loops.",
-        meanImpact: 2.20,
-        meanFreq: 2.30,
-        activities: ["WA5", "WA6", "WA7", "WA8", "WA9", "WA10"],
-        stakeholders: ["Structural Eng.", "BIM"],
+        num: 2, title: "Cluster 2: Software & Data Management",
+        desc: "Waste rooted in disconnected platforms, manual data handling & repetitive loops.",
+        impact: 2.20, freq: 2.30,
         tools: [
-          { name: "Standardized Work", desc: "Creating standardized procedures for digital tasks, data entry, and model transfers to reduce variation and manual workarounds." },
-          { name: "Poka-Yoke (Error-proofing)", desc: "Automated checks, data validation, and error-proofing of digital deliverables." },
-          { name: "First Run Studies (FRS)", desc: "Testing new digital workflows, parameter loops, or software integrations on a small scale before actual implementation." },
-          { name: "Obeya (Internal Big Room)", desc: "Applied internally to resolve digital collaboration issues and coordinate BIM-engineering interfaces." },
-          { name: "5S System", desc: "Organizing digital workspaces, standardizing file structures, and thinking long-term gain to reduce manual admin work." }
+          { name: "Standardized Work", desc: "Baseline protocols for digital modeling, data entry, and file exchanges." },
+          { name: "Poka-Yoke (Error-proofing)", desc: "Automated checks and data validation rules preventing downstream modeling flaws." },
+          { name: "First Run Studies (FRS)", desc: "Piloting computational integrations and scripts on a small scale before rollout." },
+          { name: "Obeya (Internal Big Room)", desc: "Resolves internal BIM-to-engineering handoff bottlenecks." },
+          { name: "5S System", desc: "Standardizing digital directory architecture, clearing obsolete calculations." }
         ]
       },
       {
-        num: 3,
-        title: "Cluster 3: Design & Delivery Methodology",
-        desc: "Waste induced from core engineering tasks and workflows, leading to either over- or under-production and defects+rework.",
-        meanImpact: 2.50,
-        meanFreq: 1.90,
-        activities: ["WA11", "WA12", "WA13", "WA14"],
-        stakeholders: ["Architect", "Structural Eng.", "BIM", "Contractor", "QA/AHJ"],
+        num: 3, title: "Cluster 3: Design & Delivery Methodology",
+        desc: "Waste from core structural design tasks leading to over/under-production and defects.",
+        impact: 2.50, freq: 1.90,
         tools: [
-          { name: "Last Planner System (LPS)", desc: "May prevent premature detailing, over-optimization, and rework by ensuring engineering work is only done when downstream is ready." },
-          { name: "Plan-Do-Check-Act (PDCA)", desc: "Continuous improvement cycle used to systematically adjust calculation methods and engineering delivery standards." },
-          { name: "Standardized Work", desc: "Can create standard procedures and workflow to inhibit over-designing and only designing to a certain stage at a certain point." },
-          { name: "Poka-Yoke (Error-proofing)", desc: "Automated checks, data validation, and error proofing of deliverables, as well as blocking premature detailing." },
-          { name: "A3 Problem Solving", desc: "Visual problem synthesis used to identify technical calculation inconsistencies and structural coordination flaws." }
+          { name: "Last Planner System (LPS)", desc: "Inhibits premature detailing by ensuring work is produced only when downstream demands it." },
+          { name: "Plan-Do-Check-Act (PDCA)", desc: "Continuous feedback cycles refining calculation rigor and output standards." },
+          { name: "Standardized Work", desc: "Prevents over-designing and standardizes stage-gate deliverables." },
+          { name: "Poka-Yoke (Error-proofing)", desc: "Calculation review checklists and automated verification limits." },
+          { name: "A3 Problem Solving", desc: "Condenses complex technical design conflicts into actionable sheets." }
         ]
       },
       {
-        num: 4,
-        title: "Cluster 4: Internal Resource Management",
-        desc: "Any disruption or misallocation of talent within the organization. Characterized by inefficient use of staff resources and working hours.",
-        meanImpact: 2.44,
-        meanFreq: 2.27,
-        activities: ["WA15", "WA16", "WA17", "WA18"],
-        stakeholders: ["Client", "Architect", "Structural Eng.", "BIM", "Contractor"],
+        num: 4, title: "Cluster 4: Internal Resource Management",
+        desc: "Misallocation of talent, communication overload, and cognitive disruption.",
+        impact: 2.44, freq: 2.27,
         tools: [
-          { name: "Obeya (Big Room)", desc: "Can be used to improve meeting & bloat, especially by creating a space that encourages direct and effective communication." },
-          { name: "Last Planner System (LPS)", desc: "Stabilizes internal workload through reliable commitments and lookahead constraint removal, preventing urgent interruptions." },
-          { name: "Visual Management", desc: "Displays task status, external input, and delegation overview to improve work delegation and suppress interruptions." },
-          { name: "Root Cause Analysis (RCA)", desc: "Investigates underlying reasons for recurring urgent interruptions and misdelegation." },
-          { name: "Kaizen Events / Blitz", desc: "Fast and highly focused improvement cycles to improve a single internal subprocess within the engineering firm." }
+          { name: "Obeya (Big Room)", desc: "Replaces excessive email threads and scattered meetings with focused coordination." },
+          { name: "Last Planner System (LPS)", desc: "Protects engineers from urgent interruptions via stable lookahead work plans." },
+          { name: "Visual Management", desc: "Visual workload boards clarifying delegation and task status." },
+          { name: "Root Cause Analysis (RCA)", desc: "Uncovers root drivers of repetitive urgent interruptions and staff reassignments." },
+          { name: "Kaizen Events / Blitz", desc: "Rapid, highly focused team workshops addressing internal workflow bottlenecks." }
         ]
       }
     ];
 
-    // Navigation Tab Switching
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        const targetId = btn.getAttribute('data-tab');
-        document.getElementById(targetId).classList.add('active');
-        if (targetId === 'tab-matrix') renderMatrix();
-      });
-    });
-
-    // Helper functions
-    function getClusterBadge(clusterNum) {
-      if (clusterNum === 1) return '<span class="badge badge-c1">Cluster 1</span>';
-      if (clusterNum === 2) return '<span class="badge badge-c2">Cluster 2</span>';
-      if (clusterNum === 3) return '<span class="badge badge-c3">Cluster 3</span>';
-      if (clusterNum === 4) return '<span class="badge badge-c4">Cluster 4</span>';
-      return '<span class="badge badge-c0">Omitted</span>';
-    }
-
-    function getClusterColor(clusterNum) {
-      if (clusterNum === 1) return '#2563eb';
-      if (clusterNum === 2) return '#0d9488';
-      if (clusterNum === 3) return '#7c3aed';
-      if (clusterNum === 4) return '#e11d48';
+    // Colors
+    function getColor(c) {
+      if (c === 1) return '#2563eb';
+      if (c === 2) return '#0d9488';
+      if (c === 3) return '#7c3aed';
+      if (c === 4) return '#e11d48';
       return '#64748b';
     }
 
-    // Populate Rankings Table
-    function renderRankingsTable(data) {
-      const tbody = document.getElementById('rankings-tbody');
-      tbody.innerHTML = '';
-      data.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="score-cell">#${item.wsiRank}</td>
-          <td style="font-family:var(--font-mono); font-weight:700;">${item.id}</td>
-          <td style="font-weight:600; color:var(--text-main);">${item.name}</td>
-          <td>${getClusterBadge(item.cluster)}</td>
-          <td class="score-cell">${item.cost.toFixed(2)}</td>
-          <td class="score-cell">${item.schedule.toFixed(2)}</td>
-          <td class="score-cell">${item.quality.toFixed(2)}</td>
-          <td class="score-cell" style="color:#0284c7;">${item.s.toFixed(2)}</td>
-          <td class="score-cell" style="color:#d97706;">${item.f.toFixed(2)}</td>
-          <td class="score-cell" style="font-size:14px; font-weight:800; color:#0f172a;">${item.wsi.toFixed(2)}</td>
-        `;
-        tr.addEventListener('click', () => openDrawer(item));
-        tbody.appendChild(tr);
-      });
+    function getBadge(c) {
+      if (c === 1) return '<span class="badge badge-c1">Cluster 1</span>';
+      if (c === 2) return '<span class="badge badge-c2">Cluster 2</span>';
+      if (c === 3) return '<span class="badge badge-c3">Cluster 3</span>';
+      if (c === 4) return '<span class="badge badge-c4">Cluster 4</span>';
+      return '<span class="badge badge-c0">Omitted</span>';
     }
 
-    // Table Sorting
-    let currentSort = { col: 'wsiRank', asc: true };
-    document.querySelectorAll('#rankings-table th').forEach(th => {
-      th.addEventListener('click', () => {
-        const col = th.getAttribute('data-sort');
-        if (!col) return;
-        if (currentSort.col === col) {
-          currentSort.asc = !currentSort.asc;
-        } else {
-          currentSort.col = col;
-          currentSort.asc = true;
-        }
-        const sorted = [...WASTE_ACTIVITIES].sort((a, b) => {
-          let va = a[col];
-          let vb = b[col];
-          if (typeof va === 'string') {
-            return currentSort.asc ? va.localeCompare(vb) : vb.localeCompare(va);
-          }
-          return currentSort.asc ? va - vb : vb - va;
-        });
-        renderRankingsTable(sorted);
+    // Bottom Navigation switching
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        item.classList.add('active');
+        const viewId = item.getAttribute('data-view');
+        document.getElementById(viewId).classList.add('active');
+        window.scrollTo(0, 0);
+        if (viewId === 'view-matrix') renderMobileMatrix();
       });
     });
 
-    // Populate Stakeholder RAM Table
-    function renderRamTable() {
-      const tbody = document.getElementById('ram-tbody');
-      tbody.innerHTML = '';
-      WASTE_ACTIVITIES.forEach(item => {
-        const r = item.ram;
-        const formatRole = (val) => {
-          if (val === 'P') return `<span class="ram-P">P</span>`;
-          if (val === 'C') return `<span class="ram-C">C</span>`;
-          if (val === 'A') return `<span class="ram-A">A</span>`;
-          return `<span class="ram-none">–</span>`;
-        };
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td style="font-family:var(--font-mono); font-weight:700;">${item.id}</td>
-          <td style="font-weight:600; color:var(--text-main);">${item.name}</td>
-          <td><span class="badge ${item.origin === 'External' ? 'badge-c1' : 'badge-c2'}">${item.origin}</span></td>
-          <td class="ram-cell">${formatRole(r.cli)}</td>
-          <td class="ram-cell">${formatRole(r.arch)}</td>
-          <td class="ram-cell">${formatRole(r.mep)}</td>
-          <td class="ram-cell">${formatRole(r.str)}</td>
-          <td class="ram-cell">${formatRole(r.bim)}</td>
-          <td class="ram-cell">${formatRole(r.qa)}</td>
-          <td class="ram-cell">${formatRole(r.con)}</td>
+    // RENDER: Rankings List
+    function renderRankingsCards(items) {
+      const container = document.getElementById('rankings-card-list');
+      container.innerHTML = '';
+      items.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'activity-card';
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-title-group">
+              <span class="card-id">${a.id}</span>
+              ${getBadge(a.cluster)}
+            </div>
+            <div class="wsi-tag">WSI: ${a.wsi.toFixed(2)} (#${a.rank})</div>
+          </div>
+          <div class="card-name">${a.name}</div>
+          <div class="card-desc">${a.desc}</div>
+          <div class="card-metrics-row">
+            <span>S: <b>${a.s.toFixed(2)}</b></span>
+            <span>F: <b>${a.f.toFixed(2)}</b></span>
+            <span>Cost: <b>${a.cost.toFixed(2)}</b></span>
+            <span>Sched: <b>${a.schedule.toFixed(2)}</b></span>
+            <span>Qual: <b>${a.quality.toFixed(2)}</b></span>
+          </div>
         `;
-        tr.addEventListener('click', () => openDrawer(item));
-        tbody.appendChild(tr);
+        card.addEventListener('click', () => openSheet(a));
+        container.appendChild(card);
       });
     }
 
-    // Populate Lean Improvement Clusters
-    function renderClusters() {
-      const container = document.getElementById('clusters-container');
+    // Filter Rankings by Cluster
+    document.querySelectorAll('#rankings-filter-scroll .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#rankings-filter-scroll .chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const filter = chip.getAttribute('data-filter');
+        if (filter === 'all') {
+          renderRankingsCards(ACTIVITIES);
+        } else {
+          renderRankingsCards(ACTIVITIES.filter(a => a.cluster.toString() === filter));
+        }
+      });
+    });
+
+    // RENDER: Stakeholder RAM Cards
+    function renderRamCards() {
+      const container = document.getElementById('ram-card-list');
       container.innerHTML = '';
-      CLUSTERS_DATA.forEach(c => {
+      ACTIVITIES.forEach(a => {
         const card = document.createElement('div');
-        card.className = 'cluster-card';
-        const toolListHtml = c.tools.map(t => `
-          <div class="cluster-tool-item">
+        card.className = 'activity-card';
+        const rolePill = (val) => {
+          if (val === 'P') return `<span class="ram-role-pill ram-P">P</span>`;
+          if (val === 'C') return `<span class="ram-role-pill ram-C">C</span>`;
+          if (val === 'A') return `<span class="ram-role-pill ram-A">A</span>`;
+          return `<span class="ram-role-pill ram-none">–</span>`;
+        };
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-title-group">
+              <span class="card-id">${a.id}</span>
+              <span class="badge ${a.origin === 'External' ? 'badge-c1' : 'badge-c2'}">${a.origin}</span>
+            </div>
+            <span style="font-size:11px; color:var(--text-muted); font-family:var(--mono);">${getBadge(a.cluster)}</span>
+          </div>
+          <div class="card-name">${a.name}</div>
+          <div class="ram-roles-grid">
+            <div><div class="ram-col-head">Cli</div>${rolePill(a.ram.Cli)}</div>
+            <div><div class="ram-col-head">Arch</div>${rolePill(a.ram.Arch)}</div>
+            <div><div class="ram-col-head">MEP</div>${rolePill(a.ram.MEP)}</div>
+            <div><div class="ram-col-head">Str</div>${rolePill(a.ram.Str)}</div>
+            <div><div class="ram-col-head">BIM</div>${rolePill(a.ram.BIM)}</div>
+            <div><div class="ram-col-head">QA</div>${rolePill(a.ram.QA)}</div>
+            <div><div class="ram-col-head">Con</div>${rolePill(a.ram.Con)}</div>
+          </div>
+        `;
+        card.addEventListener('click', () => openSheet(a));
+        container.appendChild(card);
+      });
+    }
+
+    // RENDER: Clusters & Tools
+    function renderClustersCards() {
+      const container = document.getElementById('clusters-card-list');
+      container.innerHTML = '';
+      CLUSTERS.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'cluster-mobile-card';
+        const toolsHtml = c.tools.map(t => `
+          <div class="tool-box">
             <h4>${t.name}</h4>
             <p>${t.desc}</p>
           </div>
         `).join('');
 
-        const stakeholdersHtml = c.stakeholders.map(s => `
-          <span class="stakeholder-tag involved">${s}</span>
-        `).join('');
-
         card.innerHTML = `
-          <div class="cluster-card-header">
-            <div>
-              <h3>${c.title}</h3>
-              <p style="font-size:12px; color:var(--text-secondary); margin-top:3px;">${c.desc}</p>
-            </div>
-            <div class="cluster-scores">
-              <div>Impact: <span>${c.meanImpact.toFixed(2)}</span></div>
-              <div>Freq: <span>${c.meanFreq.toFixed(2)}</span></div>
+          <div class="cluster-head">
+            <h3>${c.title}</h3>
+            <p>${c.desc}</p>
+            <div style="font-size:11px; font-family:var(--mono); margin-top:6px; color:var(--text);">
+              Mean Impact: <b>${c.impact.toFixed(2)}</b> • Mean Freq: <b>${c.freq.toFixed(2)}</b>
             </div>
           </div>
-          <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">
-            Top 5 Mapped Lean Construction Tools (Unranked)
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">
+            Top 5 Mapped Lean Tools (Unranked)
           </div>
-          <div class="cluster-tool-list">
-            ${toolListHtml}
-          </div>
-          <div>
-            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">
-              Required Stakeholder Coordination
-            </div>
-            <div class="stakeholder-tag-row">
-              ${stakeholdersHtml}
-            </div>
+          <div class="cluster-tools-container">
+            ${toolsHtml}
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    // Matrix SVG Rendering (Clean White Engineering Style)
-    let matrixState = {
-      view: 'combined', // 'combined' | 'regions'
-      trend: 'all' // 'all' | 'trend-a' | 'trend-b'
-    };
+    // RENDER: Mobile SVG Matrix
+    let matView = 'comb'; // 'comb' | 'reg'
+    let matTrend = 'all'; // 'all' | 'ta' | 'tb'
 
-    function renderMatrix() {
-      const svg = document.getElementById('matrix-svg');
+    function renderMobileMatrix() {
+      const svg = document.getElementById('mobile-svg-matrix');
       svg.innerHTML = '';
 
-      const width = 700;
-      const height = 560;
-      const padLeft = 60;
-      const padRight = 40;
-      const padTop = 30;
-      const padBottom = 55;
+      const size = 340;
+      const padL = 36;
+      const padR = 20;
+      const padT = 20;
+      const padB = 36;
+      const pw = size - padL - padR;
+      const ph = size - padT - padB;
 
-      const plotW = width - padLeft - padRight;
-      const plotH = height - padTop - padBottom;
+      const xs = (v) => padL + ((v - 1.0) / 3.0) * pw;
+      const ys = (v) => padT + ph - ((v - 1.0) / 3.0) * ph;
 
-      const xScale = (val) => padLeft + ((val - 1.0) / 3.0) * plotW;
-      const yScale = (val) => padTop + plotH - ((val - 1.0) / 3.0) * plotH;
+      const midX = xs(2.5);
+      const midY = ys(2.5);
 
-      const midX = xScale(2.5);
-      const midY = yScale(2.5);
+      // Background Canvas
+      svg.innerHTML += `<rect x="${padL}" y="${padT}" width="${pw}" height="${ph}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>`;
+      // Top Right High Impact / High Freq quadrant highlight
+      svg.innerHTML += `<rect x="${midX}" y="${padT}" width="${pw - (midX - padL)}" height="${midY - padT}" fill="#f1f5f9" fill-opacity="0.6"/>`;
 
-      // Defs (Markers)
+      // Split lines at 2.5
       svg.innerHTML += `
-        <defs>
-          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.1"/>
-          </filter>
-        </defs>
+        <line x1="${midX}" y1="${padT}" x2="${midX}" y2="${padT + ph}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="${padL}" y1="${midY}" x2="${padL + pw}" y2="${midY}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
       `;
 
-      // Background rect
-      svg.innerHTML += `<rect x="${padLeft}" y="${padTop}" width="${plotW}" height="${plotH}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>`;
-
-      // High Impact + High Frequency quadrant highlight (Top Right)
-      svg.innerHTML += `<rect x="${midX}" y="${padTop}" width="${plotW - (midX - padLeft)}" height="${midY - padTop}" fill="#f8fafc" fill-opacity="0.75" />`;
-
-      // Quadrant Divider Lines (at 2.5)
-      svg.innerHTML += `
-        <line x1="${midX}" y1="${padTop}" x2="${midX}" y2="${padTop + plotH}" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
-        <line x1="${padLeft}" y1="${midY}" x2="${padLeft + plotW}" y2="${midY}" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
-      `;
-
-      // Quadrant Labels
-      svg.innerHTML += `
-        <text x="${padLeft + 12}" y="${padTop + 20}" font-size="11" font-weight="700" fill="#64748b" letter-spacing="0.04em">HIGH FREQUENCY / LOW IMPACT</text>
-        <text x="${padLeft + plotW - 12}" y="${padTop + 20}" text-anchor="end" font-size="11" font-weight="700" fill="#0f172a" letter-spacing="0.04em">HIGH FREQUENCY / HIGH IMPACT</text>
-        <text x="${padLeft + 12}" y="${padTop + plotH - 14}" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="0.04em">LOW FREQUENCY / LOW IMPACT</text>
-        <text x="${padLeft + plotW - 12}" y="${padTop + plotH - 14}" text-anchor="end" font-size="11" font-weight="700" fill="#64748b" letter-spacing="0.04em">LOW FREQUENCY / HIGH IMPACT</text>
-      `;
-
-      // Axes Ticks & Grid Lines
-      const tickVals = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0];
-      tickVals.forEach(v => {
-        const x = xScale(v);
-        const y = yScale(v);
-
-        // X Grid & Tick
-        if (v > 1.0 && v < 4.0 && v !== 2.5) {
-          svg.innerHTML += `<line x1="${x}" y1="${padTop}" x2="${x}" y2="${padTop + plotH}" stroke="#f1f5f9" stroke-width="1"/>`;
-        }
+      // Ticks
+      [1.0, 2.0, 2.5, 3.0, 4.0].forEach(v => {
+        const x = xs(v);
+        const y = ys(v);
         svg.innerHTML += `
-          <line x1="${x}" y1="${padTop + plotH}" x2="${x}" y2="${padTop + plotH + 5}" stroke="#64748b" stroke-width="1"/>
-          <text x="${x}" y="${padTop + plotH + 20}" text-anchor="middle" font-size="11" font-family="var(--font-mono)" fill="#64748b">${v.toFixed(1)}</text>
-        `;
-
-        // Y Grid & Tick
-        if (v > 1.0 && v < 4.0 && v !== 2.5) {
-          svg.innerHTML += `<line x1="${padLeft}" y1="${y}" x2="${padLeft + plotW}" y2="${y}" stroke="#f1f5f9" stroke-width="1"/>`;
-        }
-        svg.innerHTML += `
-          <line x1="${padLeft - 5}" y1="${y}" x2="${padLeft}" y2="${y}" stroke="#64748b" stroke-width="1"/>
-          <text x="${padLeft - 10}" y="${y + 4}" text-anchor="end" font-size="11" font-family="var(--font-mono)" fill="#64748b">${v.toFixed(1)}</text>
+          <line x1="${x}" y1="${padT + ph}" x2="${x}" y2="${padT + ph + 4}" stroke="#64748b" stroke-width="1"/>
+          <text x="${x}" y="${padT + ph + 14}" text-anchor="middle" font-size="9" font-family="var(--mono)" fill="#64748b">${v.toFixed(1)}</text>
+          <line x1="${padL - 4}" y1="${y}" x2="${padL}" y2="${y}" stroke="#64748b" stroke-width="1"/>
+          <text x="${padL - 6}" y="${y + 3}" text-anchor="end" font-size="9" font-family="var(--mono)" fill="#64748b">${v.toFixed(1)}</text>
         `;
       });
 
-      // Axis Titles
+      // Axis labels
       svg.innerHTML += `
-        <text x="${padLeft + plotW / 2}" y="${height - 12}" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">Mean Combined Impact Score (S) [Scale: 1.0 – 4.0]</text>
-        <text x="18" y="${padTop + plotH / 2}" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a" transform="rotate(-90 18 ${padTop + plotH / 2})">Mean Frequency of Occurrence (F) [Scale: 1.0 – 4.0]</text>
+        <text x="${padL + pw / 2}" y="${size - 4}" text-anchor="middle" font-size="10" font-weight="600" fill="#0f172a">Combined Impact (S)</text>
+        <text x="10" y="${padT + ph / 2}" text-anchor="middle" font-size="10" font-weight="600" fill="#0f172a" transform="rotate(-90 10 ${padT + ph / 2})">Frequency (F)</text>
       `;
 
-      // Filtered Activities based on Trend selection (Figure 5.16)
-      let displayActivities = [...WASTE_ACTIVITIES];
-      if (matrixState.trend === 'trend-a') {
-        // Trend A: Inverse relationship (WA10, WA17, WA6, WA9, WA8, WA5, WA14, WA16, WA12, WA15, WA11, WA2)
-        const trendAIds = ["WA10", "WA17", "WA6", "WA9", "WA8", "WA5", "WA14", "WA16", "WA12", "WA15", "WA11", "WA2"];
-        displayActivities = displayActivities.filter(a => trendAIds.includes(a.id));
-      } else if (matrixState.trend === 'trend-b') {
-        // Trend B: Positive relationship / Outliers (WA19, WA7, WA13, WA18, WA4, WA1)
-        const trendBIds = ["WA19", "WA7", "WA13", "WA18", "WA4", "WA1"];
-        displayActivities = displayActivities.filter(a => trendBIds.includes(a.id));
+      // Filter dataset
+      let dataset = [...ACTIVITIES];
+      if (matTrend === 'ta') {
+        const tA = ["WA10", "WA17", "WA6", "WA9", "WA8", "WA5", "WA14", "WA16", "WA12", "WA15", "WA11", "WA2"];
+        dataset = dataset.filter(a => tA.includes(a.id));
+      } else if (matTrend === 'tb') {
+        const tB = ["WA19", "WA7", "WA13", "WA18", "WA4", "WA1"];
+        dataset = dataset.filter(a => tB.includes(a.id));
       }
 
-      // Draw Data Points
-      displayActivities.forEach(item => {
-        if (matrixState.view === 'combined') {
-          const cx = xScale(item.s);
-          const cy = yScale(item.f);
-          const col = getClusterColor(item.cluster);
+      // Plot Points
+      dataset.forEach(item => {
+        if (matView === 'comb') {
+          const cx = xs(item.s);
+          const cy = ys(item.f);
+          const cCol = getColor(item.cluster);
 
           const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
           g.setAttribute("style", "cursor:pointer;");
           g.innerHTML = `
-            <circle cx="${cx}" cy="${cy}" r="12" fill="#ffffff" stroke="${col}" stroke-width="2" filter="url(#shadow)"/>
-            <text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="10" font-weight="700" font-family="var(--font-mono)" fill="${col}">${item.num}</text>
+            <circle cx="${cx}" cy="${cy}" r="11" fill="#ffffff" stroke="${cCol}" stroke-width="2"/>
+            <text x="${cx}" y="${cy + 3.5}" text-anchor="middle" font-size="9" font-weight="700" font-family="var(--mono)" fill="${cCol}">${item.num}</text>
           `;
-          g.addEventListener('click', () => {
-            updateMatrixQuickInfo(item);
-            openDrawer(item);
-          });
+          g.addEventListener('click', () => openSheet(item));
           svg.appendChild(g);
         } else {
-          // Regional view: US (Orange Circle) vs DK (Green Diamond)
-          const usX = xScale(item.us.s);
-          const usY = yScale(item.us.f);
-          const dkX = xScale(item.dk.s);
-          const dkY = yScale(item.dk.f);
+          // Regional US vs DK
+          const usX = xs(item.us.s);
+          const usY = ys(item.us.f);
+          const dkX = xs(item.dk.s);
+          const dkY = ys(item.dk.f);
 
-          // Connection line between regional points
-          svg.innerHTML += `<line x1="${usX}" y1="${usY}" x2="${dkX}" y2="${dkY}" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="2,2"/>`;
+          svg.innerHTML += `<line x1="${usX}" y1="${usY}" x2="${dkX}" y2="${dkY}" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2,2"/>`;
 
-          // US point (Circle)
+          // US circle
           const gUS = document.createElementNS("http://www.w3.org/2000/svg", "g");
-          gUS.setAttribute("style", "cursor:pointer;");
           gUS.innerHTML = `
-            <circle cx="${usX}" cy="${usY}" r="9" fill="#ea580c" fill-opacity="0.85" stroke="#ffffff" stroke-width="1.5"/>
-            <text x="${usX}" y="${usY + 3.5}" text-anchor="middle" font-size="9" font-weight="700" font-family="var(--font-mono)" fill="#ffffff">${item.num}</text>
+            <circle cx="${usX}" cy="${usY}" r="8" fill="#ea580c" stroke="#ffffff" stroke-width="1.2"/>
+            <text x="${usX}" y="${usY + 3}" text-anchor="middle" font-size="8" font-weight="700" font-family="var(--mono)" fill="#ffffff">${item.num}</text>
           `;
-          gUS.addEventListener('click', () => openDrawer(item));
+          gUS.addEventListener('click', () => openSheet(item));
           svg.appendChild(gUS);
 
-          // DK point (Diamond)
+          // DK Diamond
           const gDK = document.createElementNS("http://www.w3.org/2000/svg", "g");
-          gDK.setAttribute("style", "cursor:pointer;");
           gDK.innerHTML = `
-            <polygon points="${dkX},${dkY - 11} ${dkX + 11},${dkY} ${dkX},${dkY + 11} ${dkX - 11},${dkY}" fill="#059669" fill-opacity="0.9" stroke="#ffffff" stroke-width="1.5"/>
-            <text x="${dkX}" y="${dkY + 3.5}" text-anchor="middle" font-size="9" font-weight="700" font-family="var(--font-mono)" fill="#ffffff">${item.num}</text>
+            <polygon points="${dkX},${dkY - 9} ${dkX + 9},${dkY} ${dkX},${dkY + 9} ${dkX - 9},${dkY}" fill="#059669" stroke="#ffffff" stroke-width="1.2"/>
+            <text x="${dkX}" y="${dkY + 3}" text-anchor="middle" font-size="8" font-weight="700" font-family="var(--mono)" fill="#ffffff">${item.num}</text>
           `;
-          gDK.addEventListener('click', () => openDrawer(item));
+          gDK.addEventListener('click', () => openSheet(item));
           svg.appendChild(gDK);
         }
       });
     }
 
-    function updateMatrixQuickInfo(item) {
-      const container = document.getElementById('matrix-quick-info');
-      container.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-family:var(--font-mono); font-weight:800; font-size:14px; color:var(--text-main);">${item.id}: ${item.name}</span>
-          ${getClusterBadge(item.cluster)}
-        </div>
-        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">${item.desc}</p>
-        <div class="info-stat-row">
-          <span>Combined Impact (S)</span>
-          <strong>${item.s.toFixed(2)}</strong>
-        </div>
-        <div class="info-stat-row">
-          <span>Frequency (F)</span>
-          <strong>${item.f.toFixed(2)}</strong>
-        </div>
-        <div class="info-stat-row">
-          <span>WSI Score (S × F)</span>
-          <strong style="color:#0f172a;">${item.wsi.toFixed(2)} (Rank #${item.wsiRank})</strong>
-        </div>
-        <button class="btn-toggle" style="width:100%; margin-top:12px; background:#0f172a; color:#fff;" onclick="openDrawerFromId('${item.id}')">View Full Detail Drawer</button>
-      `;
-    }
-
-    // Matrix Toolbar Event Handlers
-    document.getElementById('btn-view-combined').addEventListener('click', function() {
-      matrixState.view = 'combined';
+    // Matrix Filters Event Listeners
+    document.getElementById('btn-mat-comb').addEventListener('click', function() {
+      matView = 'comb';
       this.classList.add('active');
-      document.getElementById('btn-view-regions').classList.remove('active');
-      renderMatrix();
+      document.getElementById('btn-mat-reg').classList.remove('active');
+      renderMobileMatrix();
+    });
+    document.getElementById('btn-mat-reg').addEventListener('click', function() {
+      matView = 'reg';
+      this.classList.add('active');
+      document.getElementById('btn-mat-comb').classList.remove('active');
+      renderMobileMatrix();
+    });
+    document.getElementById('btn-mat-all').addEventListener('click', function() {
+      matTrend = 'all';
+      document.querySelectorAll('#btn-mat-all, #btn-mat-ta, #btn-mat-tb').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderMobileMatrix();
+    });
+    document.getElementById('btn-mat-ta').addEventListener('click', function() {
+      matTrend = 'ta';
+      document.querySelectorAll('#btn-mat-all, #btn-mat-ta, #btn-mat-tb').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderMobileMatrix();
+    });
+    document.getElementById('btn-mat-tb').addEventListener('click', function() {
+      matTrend = 'tb';
+      document.querySelectorAll('#btn-mat-all, #btn-mat-ta, #btn-mat-tb').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderMobileMatrix();
     });
 
-    document.getElementById('btn-view-regions').addEventListener('click', function() {
-      matrixState.view = 'regions';
-      this.classList.add('active');
-      document.getElementById('btn-view-combined').classList.remove('active');
-      renderMatrix();
-    });
+    // Native Bottom Sheet Logic
+    function openSheet(item) {
+      document.getElementById('sheet-badge').textContent = item.id;
+      document.getElementById('sheet-badge').className = `badge badge-c${item.cluster}`;
+      document.getElementById('sheet-title').textContent = item.name;
+      document.getElementById('sheet-desc').textContent = item.desc;
 
-    document.getElementById('btn-trend-all').addEventListener('click', function() {
-      matrixState.trend = 'all';
-      document.querySelectorAll('#btn-trend-all, #btn-trend-a, #btn-trend-b').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      renderMatrix();
-    });
+      document.getElementById('sm-cost').textContent = item.cost.toFixed(2);
+      document.getElementById('sm-sched').textContent = item.schedule.toFixed(2);
+      document.getElementById('sm-qual').textContent = item.quality.toFixed(2);
+      document.getElementById('sm-s').textContent = item.s.toFixed(2);
+      document.getElementById('sm-f').textContent = item.f.toFixed(2);
+      document.getElementById('sm-wsi').textContent = item.wsi.toFixed(2);
 
-    document.getElementById('btn-trend-a').addEventListener('click', function() {
-      matrixState.trend = 'trend-a';
-      document.querySelectorAll('#btn-trend-all, #btn-trend-a, #btn-trend-b').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      renderMatrix();
-    });
+      document.getElementById('sheet-cluster').textContent = item.cluster > 0 ? `Cluster ${item.cluster}` : 'Omitted';
+      document.getElementById('sheet-origin').textContent = item.origin;
+      document.getElementById('sheet-leanwastes').textContent = item.leanWastes.join(', ');
 
-    document.getElementById('btn-trend-b').addEventListener('click', function() {
-      matrixState.trend = 'trend-b';
-      document.querySelectorAll('#btn-trend-all, #btn-trend-a, #btn-trend-b').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      renderMatrix();
-    });
-
-    // Drawer Mechanics
-    function openDrawer(item) {
-      document.getElementById('drawer-badge').textContent = item.id;
-      document.getElementById('drawer-badge').className = `badge badge-c${item.cluster}`;
-      document.getElementById('drawer-title').textContent = item.name;
-      document.getElementById('drawer-desc').textContent = item.desc;
-
-      document.getElementById('m-cost').textContent = item.cost.toFixed(2);
-      document.getElementById('m-sched').textContent = item.schedule.toFixed(2);
-      document.getElementById('m-qual').textContent = item.quality.toFixed(2);
-      document.getElementById('m-s').textContent = item.s.toFixed(2);
-      document.getElementById('m-f').textContent = item.f.toFixed(2);
-      document.getElementById('m-wsi').textContent = item.wsi.toFixed(2);
-
-      document.getElementById('drawer-cluster').textContent = item.cluster > 0 ? `Cluster ${item.cluster}` : 'Omitted from cluster mapping';
-      document.getElementById('drawer-origin').textContent = item.origin;
-      document.getElementById('drawer-leanwastes').textContent = item.leanWastes.join(", ");
-
-      // Stakeholders row
-      const stRow = document.getElementById('drawer-stakeholders');
-      stRow.innerHTML = '';
-      const labels = { cli: "Client", arch: "Architect", mep: "MEP", str: "Structural Eng.", bim: "BIM", qa: "QA / AHJ", con: "Contractor" };
-      for (const [key, val] of Object.entries(item.ram)) {
-        if (val !== '-') {
-          const span = document.createElement('span');
-          span.className = 'stakeholder-tag involved';
-          span.textContent = `${labels[key]}: [${val}]`;
-          stRow.appendChild(span);
+      const ramCont = document.getElementById('sheet-ram-details');
+      ramCont.innerHTML = '';
+      for (const [k, v] of Object.entries(item.ram)) {
+        if (v !== '-') {
+          const s = document.createElement('span');
+          s.style.background = '#f1f5f9';
+          s.style.padding = '3px 6px';
+          s.style.borderRadius = '4px';
+          s.style.border = '1px solid var(--border)';
+          s.textContent = `${k}: [${v}]`;
+          ramCont.appendChild(s);
         }
       }
 
-      // Quote section
-      const quoteSec = document.getElementById('drawer-quote-section');
+      const qSec = document.getElementById('sheet-quote-section');
       if (item.quote) {
-        quoteSec.style.display = 'block';
-        document.getElementById('drawer-quote').textContent = `“${item.quote}”`;
-        document.getElementById('drawer-quote-author').textContent = `— ${item.quoteAuthor}`;
+        qSec.style.display = 'block';
+        document.getElementById('sheet-quote').textContent = `“${item.quote}”`;
+        document.getElementById('sheet-quote-auth').textContent = `— ${item.quoteAuthor}`;
       } else {
-        quoteSec.style.display = 'none';
+        qSec.style.display = 'none';
       }
 
-      document.getElementById('drawer').classList.add('open');
-      document.getElementById('drawer-overlay').classList.add('open');
+      document.getElementById('bottom-sheet').classList.add('open');
+      document.getElementById('sheet-backdrop').classList.add('open');
     }
 
-    function openDrawerFromId(id) {
-      const item = WASTE_ACTIVITIES.find(a => a.id === id);
-      if (item) openDrawer(item);
+    function closeSheet() {
+      document.getElementById('bottom-sheet').classList.remove('open');
+      document.getElementById('sheet-backdrop').classList.remove('open');
     }
 
-    function closeDrawer() {
-      document.getElementById('drawer').classList.remove('open');
-      document.getElementById('drawer-overlay').classList.remove('open');
-    }
+    document.getElementById('sheet-backdrop').addEventListener('click', closeSheet);
+    document.getElementById('sheet-handle-bar').addEventListener('click', closeSheet);
 
-    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
-    document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
-
-    // Initial Startup Rendering
+    // Initial Load
     window.addEventListener('DOMContentLoaded', () => {
-      renderMatrix();
-      renderRankingsTable(WASTE_ACTIVITIES);
-      renderRamTable();
-      renderClusters();
+      renderMobileMatrix();
+      renderRankingsCards(ACTIVITIES);
+      renderRamCards();
+      renderClustersCards();
     });
   </script>
 </body>

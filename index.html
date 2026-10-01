@@ -117,7 +117,7 @@
       background: var(--bg-subtle);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 500;
@@ -531,9 +531,6 @@
       <div class="filter-scroll">
         <button class="chip active" id="btn-mat-comb">Combined (N=34)</button>
         <button class="chip" id="btn-mat-reg">US vs DK</button>
-        <button class="chip" id="btn-mat-all">All Items</button>
-        <button class="chip" id="btn-mat-ta">Trend A (Inverse)</button>
-        <button class="chip" id="btn-mat-tb">Trend B (Positive)</button>
       </div>
 
       <div class="chart-card">
@@ -541,16 +538,6 @@
         <div style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:center;">
           Tap any number marker to inspect activity details
         </div>
-      </div>
-
-      <div style="margin-top:14px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:12px;">
-        <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px;">
-          Matrix Dynamics (Report p. 63–65)
-        </div>
-        <p style="font-size:12px; color:var(--text); line-height:1.4;">
-          <strong>Trend A:</strong> High frequency activities cluster at lower impact, while high-impact wastes show lower occurrence.<br>
-          <strong>Trend B:</strong> WA1 (Late Architectural Changes) is the standalone high-impact and high-frequency outlier. WA19 sits isolated as low-impact and low-frequency.
-        </p>
       </div>
     </section>
 
@@ -1087,7 +1074,6 @@
     }
 
     let matView = 'comb';
-    let matTrend = 'all';
 
     function renderMobileMatrix() {
       const svg = document.getElementById('mobile-svg-matrix');
@@ -1131,16 +1117,7 @@
         <text x="10" y="${padT + ph / 2}" text-anchor="middle" font-size="10" font-weight="600" fill="#0f172a" transform="rotate(-90 10 ${padT + ph / 2})">Frequency (F)</text>
       `;
 
-      let dataset = [...ACTIVITIES];
-      if (matTrend === 'ta') {
-        const tA = ["WA10", "WA17", "WA6", "WA9", "WA8", "WA5", "WA14", "WA16", "WA12", "WA15", "WA11", "WA2"];
-        dataset = dataset.filter(a => tA.includes(a.id));
-      } else if (matTrend === 'tb') {
-        const tB = ["WA19", "WA7", "WA13", "WA18", "WA4", "WA1"];
-        dataset = dataset.filter(a => tB.includes(a.id));
-      }
-
-      dataset.forEach(item => {
+      ACTIVITIES.forEach(item => {
         if (matView === 'comb') {
           const cx = xs(item.s);
           const cy = ys(item.f);
@@ -1191,24 +1168,6 @@
       matView = 'reg';
       this.classList.add('active');
       document.getElementById('btn-mat-comb').classList.remove('active');
-      renderMobileMatrix();
-    });
-    document.getElementById('btn-mat-all').addEventListener('click', function() {
-      matTrend = 'all';
-      document.querySelectorAll('#btn-mat-all, #btn-mat-ta, #btn-mat-tb').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      renderMobileMatrix();
-    });
-    document.getElementById('btn-mat-ta').addEventListener('click', function() {
-      matTrend = 'ta';
-      document.querySelectorAll('#btn-mat-all, #btn-mat-ta, #btn-mat-tb').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      renderMobileMatrix();
-    });
-    document.getElementById('btn-mat-tb').addEventListener('click', function() {
-      matTrend = 'tb';
-      document.querySelectorAll('#btn-mat-all, #btn-mat-ta, #btn-mat-tb').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
       renderMobileMatrix();
     });
 
